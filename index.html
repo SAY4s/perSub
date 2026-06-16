@@ -202,8 +202,8 @@
    * endpoint (Node.js, Cloudflare Worker, etc.) and call that instead.
    * For private/LAN use, this is acceptable.
    */
-  const TELEGRAM_BOT_TOKEN = '8725654335:AAExIju-h1mMLzEiOzpvla3KzWKPbE004kM';   // ← عوض کن
-  const ADMIN_CHAT_ID      = '7633207763';     // ← عوض کن
+  const TELEGRAM_BOT_TOKEN = 'YOUR_TRACKING_BOT_TOKEN';   // ← عوض کن
+  const ADMIN_CHAT_ID      = 'YOUR_PERSONAL_CHAT_ID';     // ← عوض کن
 </script>
 
 <!-- ═══════ NAVBAR ═══════ -->
@@ -220,6 +220,7 @@
       <a href="#features" style="color:var(--muted);text-decoration:none;font-size:0.88rem;transition:color .2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='var(--muted)'">Features</a>
       <a href="#how" style="color:var(--muted);text-decoration:none;font-size:0.88rem;transition:color .2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='var(--muted)'">How it works</a>
       <a href="#pricing" style="color:var(--muted);text-decoration:none;font-size:0.88rem;transition:color .2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='var(--muted)'">Pricing</a>
+      <a href="#support" style="color:var(--muted);text-decoration:none;font-size:0.88rem;transition:color .2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='var(--muted)'">پشتیبانی</a>
     </nav>
     <button class="btn-primary" style="padding:.55rem 1.3rem;" onclick="openModal('perSUB ماهانه','۱۴۹ تومان')">Get Started →</button>
   </div>
@@ -496,6 +497,86 @@
   </div>
 </section>
 
+<!-- ═══════ SUPPORT ═══════ -->
+<section id="support" style="padding:5rem 1.25rem;position:relative;overflow:hidden;">
+  <div class="glow-orb" style="width:350px;height:350px;background:rgba(6,182,212,0.07);bottom:-80px;left:5%;"></div>
+  <div style="max-width:900px;margin:0 auto;position:relative;">
+    <div style="text-align:center;margin-bottom:3rem;">
+      <div class="badge" style="margin-bottom:1rem;">پشتیبانی</div>
+      <h2 style="font-size:2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem;">
+        مشکلی پیش اومد؟ <span class="gradient-text">اینجاییم</span>
+      </h2>
+      <p style="color:var(--muted);font-size:0.92rem;">We're here to help — reach us through any of the channels below</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;">
+
+      <!-- Telegram support -->
+      <div class="glass-card" style="padding:1.75rem;text-align:center;">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M21.2 4.2L2.6 11.4c-1.2.5-1.2 1.2-.2 1.5l4.6 1.4 1.8 5.4c.2.7.5.9 1 .9.4 0 .6-.2.9-.5l2.2-2.2 4.5 3.3c.8.5 1.4.2 1.6-.8l2.8-13.3c.3-1.3-.4-1.9-1.6-1.4z" fill="var(--neon)"/></svg>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:.4rem;">پشتیبانی تلگرام</h3>
+        <p style="color:var(--muted);font-size:0.85rem;line-height:1.65;margin-bottom:1.1rem;">
+          سریع‌ترین راه ارتباط با تیم ما. معمولاً در کمتر از ۳۰ دقیقه پاسخ می‌دهیم.
+        </p>
+        <a href="https://t.me/YOUR_SUPPORT_USERNAME" target="_blank"
+          style="display:inline-block;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);color:var(--neon);border-radius:8px;padding:.55rem 1.2rem;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all .2s;"
+          onmouseover="this.style.background='rgba(6,182,212,0.2)'" onmouseout="this.style.background='rgba(6,182,212,0.1)'">
+          ارسال پیام در تلگرام →
+        </a>
+      </div>
+
+      <!-- Email support -->
+      <div class="glass-card" style="padding:1.75rem;text-align:center;">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(124,58,237,0.14);border:1px solid rgba(124,58,237,0.32);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+          <svg width="24" height="24" fill="none" stroke="var(--accent-bright)" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:.4rem;">ایمیل پشتیبانی</h3>
+        <p style="color:var(--muted);font-size:0.85rem;line-height:1.65;margin-bottom:1.1rem;">
+          برای مشکلات فنی، سوالات حساب یا درخواست‌های ویژه ایمیل بزنید.
+        </p>
+        <a href="mailto:support@yourdomain.com"
+          style="display:inline-block;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);color:var(--accent-bright);border-radius:8px;padding:.55rem 1.2rem;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all .2s;"
+          onmouseover="this.style.background='rgba(124,58,237,0.2)'" onmouseout="this.style.background='rgba(124,58,237,0.1)'">
+          support@yourdomain.com
+        </a>
+      </div>
+
+      <!-- FAQ / Common issues -->
+      <div class="glass-card" style="padding:1.75rem;text-align:center;">
+        <div style="width:52px;height:52px;border-radius:14px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.28);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+          <svg width="24" height="24" fill="none" stroke="var(--accent-bright)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h3 style="font-weight:700;margin-bottom:.4rem;">مشکلات رایج</h3>
+        <p style="color:var(--muted);font-size:0.85rem;line-height:1.65;margin-bottom:1rem;">
+          ربات اضافه نشد؟ اشتراک فعال نشد؟ اینجا رایج‌ترین مشکلات و راه‌حل‌هایشان را ببینید.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:7px;text-align:right;">
+          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:.55rem .8rem;font-size:0.8rem;color:var(--muted);">
+            <span style="color:var(--neon);">▸</span> ربات اضافه نشد — ادمین کانال بودن را چک کنید
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:.55rem .8rem;font-size:0.8rem;color:var(--muted);">
+            <span style="color:var(--neon);">▸</span> یوزرنیم اشتباه — با @ دقیق وارد کنید
+          </div>
+          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:.55rem .8rem;font-size:0.8rem;color:var(--muted);">
+            <span style="color:var(--neon);">▸</span> پرداخت تأیید نشد — رسید را ارسال کنید
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- SLA strip -->
+    <div style="margin-top:2rem;text-align:center;background:rgba(124,58,237,0.07);border:1px solid var(--border);border-radius:12px;padding:1rem 1.5rem;">
+      <p style="font-size:0.85rem;color:var(--muted);">
+        ⏱ زمان پاسخ معمول: <strong style="color:var(--text);">کمتر از ۳۰ دقیقه</strong> در ساعات کاری &nbsp;·&nbsp;
+        🟢 وضعیت سیستم: <strong style="color:#4ade80;">همه سیستم‌ها فعال</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════ FOOTER ═══════ -->
 <footer style="border-top:1px solid var(--border);padding:2.5rem 1.25rem;text-align:center;">
   <div style="max-width:1100px;margin:0 auto;">
@@ -542,36 +623,79 @@
     </div>
 
     <form id="checkout-form" onsubmit="handleCheckout(event)" style="padding:0 1.5rem 1.5rem;">
-      <div style="margin-bottom:1rem;">
-        <label class="field-label" for="tg-username">Your Telegram Username *</label>
-        <p class="rtl" style="font-size:0.73rem;color:var(--dimmer);margin-bottom:5px;">نام کاربری تلگرام شما</p>
-        <input class="field-input" id="tg-username" type="text" placeholder="@username" required oninput="this.value=this.value.trim()">
+
+      <!-- Row: username + phone -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
+        <div>
+          <label class="field-label" for="tg-username">Telegram Username *</label>
+          <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">یوزرنیم تلگرام</p>
+          <input class="field-input" id="tg-username" type="text" placeholder="@username" required oninput="this.value=this.value.trim()">
+        </div>
+        <div>
+          <label class="field-label" for="phone">Phone Number *</label>
+          <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">شماره تلفن</p>
+          <input class="field-input" id="phone" type="tel" placeholder="+98 912 …" required>
+        </div>
       </div>
 
+      <!-- Email -->
+      <div style="margin-bottom:1rem;">
+        <label class="field-label" for="email">Email Address *</label>
+        <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">آدرس ایمیل</p>
+        <input class="field-input" id="email" type="email" placeholder="you@example.com" required>
+      </div>
+
+      <!-- Field of work -->
+      <div style="margin-bottom:1rem;">
+        <label class="field-label" for="field-work">Field of Work / Industry *</label>
+        <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">حوزه کاری</p>
+        <select class="field-input" id="field-work" required>
+          <option value="" disabled selected>انتخاب کنید…</option>
+          <option value="آموزش و محتوا">📚 آموزش و محتوا</option>
+          <option value="تجارت و فروش">🛒 تجارت و فروش</option>
+          <option value="کریپتو و سرمایه‌گذاری">💹 کریپتو و سرمایه‌گذاری</option>
+          <option value="مشاوره و کوچینگ">🎯 مشاوره و کوچینگ</option>
+          <option value="خبر و رسانه">📰 خبر و رسانه</option>
+          <option value="سلامت و تناسب اندام">🏋️ سلامت و تناسب اندام</option>
+          <option value="تکنولوژی">💻 تکنولوژی</option>
+          <option value="سایر">🔹 سایر</option>
+        </select>
+      </div>
+
+      <!-- Payment method -->
       <div style="margin-bottom:1rem;">
         <label class="field-label" for="pay-method">Payment Method *</label>
-        <p class="rtl" style="font-size:0.73rem;color:var(--dimmer);margin-bottom:5px;">روش پرداخت</p>
+        <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">روش پرداخت</p>
         <select class="field-input" id="pay-method" required>
           <option value="" disabled selected>Select a method…</option>
-          <option value="Card Transfer">💳 Card Transfer</option>
+          <option value="انتقال کارت به کارت">💳 کارت به کارت</option>
           <option value="Crypto USDT (TRC-20)">🪙 Crypto USDT (TRC-20)</option>
           <option value="Crypto USDT (ERC-20)">🪙 Crypto USDT (ERC-20)</option>
         </select>
       </div>
 
-      <div style="margin-bottom:1.5rem;">
+      <!-- Tx ref -->
+      <div style="margin-bottom:1rem;">
         <label class="field-label" for="tx-ref">Transaction Reference / Proof *</label>
-        <p class="rtl" style="font-size:0.73rem;color:var(--dimmer);margin-bottom:5px;">شماره تراکنش یا رسید</p>
-        <input class="field-input" id="tx-ref" type="text" placeholder="Tx ID, reference number, or payment note…" required>
-        <p style="font-size:0.76rem;color:var(--dimmer);margin-top:5px;">Any reference our team can use to verify your payment.</p>
+        <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">شماره تراکنش یا رسید</p>
+        <input class="field-input" id="tx-ref" type="text" placeholder="شماره پیگیری، Tx ID یا یادداشت…" required>
+      </div>
+
+      <!-- Bot description -->
+      <div style="margin-bottom:1.5rem;">
+        <label class="field-label" for="bot-desc">توضیحات — ربات شما چطور باشه؟ *</label>
+        <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">هر چیزی که می‌خواید در ربات باشه، پلن‌ها، قیمت‌ها، پیام‌های خوش‌آمد و غیره</p>
+        <textarea class="field-input" id="bot-desc" rows="4"
+          placeholder="مثلاً: یک کانال آموزشی دارم، می‌خوام ۳ پلن هفتگی، ماهانه و سه‌ماهه داشته باشم. پیام خوش‌آمد فارسی باشه و…"
+          required style="resize:vertical;min-height:90px;"></textarea>
       </div>
 
       <button type="submit" class="btn-primary" id="submit-btn" style="width:100%;padding:.85rem;font-size:0.95rem;">
-        <span id="submit-label">🔐 Confirm & Send Order</span>
-        <span id="submit-spinner" style="display:none;align-items:center;gap:8px;"><span class="spin"></span> Sending…</span>
+        <span id="submit-label">🚀 ثبت سفارش</span>
+        <span id="submit-spinner" style="display:none;align-items:center;gap:8px;"><span class="spin"></span> در حال ارسال…</span>
       </button>
-      <p style="text-align:center;font-size:0.76rem;color:var(--dimmer);margin-top:.6rem;">
-        Our admin activates your bot access after verifying payment · تیم ما پس از تأیید پرداخت ربات را فعال می‌کند
+      <p style="text-align:center;font-size:0.75rem;color:var(--dimmer);margin-top:.65rem;">
+        تیم ما پس از بررسی سفارش با شما تماس می‌گیرد
       </p>
     </form>
   </div>
@@ -582,6 +706,7 @@
 
 <!-- ═══════ JAVASCRIPT ═══════ -->
 <script>
+/* ── Modal ── */
 function openModal(planName, planPrice) {
   document.getElementById('modal-plan-name').textContent = planName;
   document.getElementById('modal-plan-price').textContent = planPrice;
@@ -600,80 +725,136 @@ function handleOverlayClick(e) {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
+/* ── Toast ── */
 function showToast(msg, type = 'success') {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = `show ${type}`;
-  setTimeout(() => t.className = '', 4500);
+  setTimeout(() => t.className = '', 5000);
 }
 
+/* ── Submit state ── */
 function setLoading(on) {
   document.getElementById('submit-btn').disabled = on;
   document.getElementById('submit-label').style.display = on ? 'none' : 'inline';
-  const sp = document.getElementById('submit-spinner');
-  sp.style.display = on ? 'flex' : 'none';
+  document.getElementById('submit-spinner').style.display = on ? 'flex' : 'none';
 }
 
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;');
+/* ══════════════════════════════════════════════════
+   روش ارسال داده:
+
+   ① داخل Telegram Mini App  → Telegram.WebApp.sendData(JSON)
+      داده مستقیم به handle_webapp_data در bot_perSub.py میره
+      ربات ذخیره دیتابیس + پیام ادمین + دکمه‌ها رو handle میکنه
+
+   ② باز شده در مرورگر معمولی → fetch به Telegram Bot API
+      (fallback — بدون دیتابیس، فقط پیام به ادمین)
+══════════════════════════════════════════════════ */
+
+const IS_TELEGRAM_WEBAPP = !!(window.Telegram && window.Telegram.WebApp
+                               && window.Telegram.WebApp.initData);
+
+/* ── Form submit ── */
+async function handleCheckout(e) {
+  e.preventDefault();
+
+  const username  = document.getElementById('tg-username').value.trim();
+  const phone     = document.getElementById('phone').value.trim();
+  const email     = document.getElementById('email').value.trim();
+  const field     = document.getElementById('field-work').value;
+  const method    = document.getElementById('pay-method').value;
+  const reference = document.getElementById('tx-ref').value.trim();
+  const botDesc   = document.getElementById('bot-desc').value.trim();
+  const plan      = document.getElementById('modal-plan-name').textContent;
+  const price     = document.getElementById('modal-plan-price').textContent;
+
+  if (!username.startsWith('@')) {
+    showToast('⚠️ یوزرنیم تلگرام باید با @ شروع شود', 'error');
+    document.getElementById('tg-username').focus();
+    return;
+  }
+
+  const formData = { username, phone, email, field, method, reference, botDesc, plan, price };
+
+  setLoading(true);
+  try {
+    if (IS_TELEGRAM_WEBAPP) {
+      /*
+       * ① Mini App mode
+       * داده JSON به ربات پایتون میره → handle_webapp_data
+       * ربات خودش دیتابیس رو آپدیت میکنه و پیام ادمین رو میفرسته
+       */
+      window.Telegram.WebApp.sendData(JSON.stringify(formData));
+      // sendData صفحه رو میبنده، پس toast لازم نیست
+    } else {
+      /*
+       * ② Browser fallback mode
+       * مستقیم به Telegram Bot API — بدون دیتابیس
+       * فقط پیام اطلاع‌رسانی به ادمین میفرسته
+       */
+      await sendFallbackNotification(formData);
+      showToast('✅ سفارش ثبت شد! تیم ما به زودی با شما تماس می‌گیرد.');
+      closeModal();
+    }
+  } catch (err) {
+    console.error('Submit error:', err);
+    showToast('❌ خطا در ارسال. لطفاً دوباره امتحان کنید.', 'error');
+    setLoading(false);
+  }
 }
 
-async function sendSalesNotificationToTelegram(data) {
-  const divider = '━━━━━━━━━━━━━━━━━━';
-  const ts = new Date().toLocaleString('en-GB', {
-    day:'2-digit', month:'short', year:'numeric',
-    hour:'2-digit', minute:'2-digit', timeZoneName:'short'
+/* ── Fallback: fetch مستقیم به Telegram API (مرورگر عادی) ── */
+async function sendFallbackNotification(data) {
+  /*
+   * ⚠️  SECURITY WARNING
+   * این توکن در سورس کد قابل مشاهده است.
+   * فقط برای حالتی که سایت خارج از Mini App باز میشه استفاده میشه.
+   * در Mini App اصلی، توکن اینجا استفاده نمیشه.
+   */
+  const D  = '━━━━━━━━━━━━━━━━━━━━';
+  const ts = new Date().toLocaleString('fa-IR', {
+    year:'numeric', month:'long', day:'numeric',
+    hour:'2-digit', minute:'2-digit'
   });
+  const cleanUser = data.username.replace(/^@/, '');
+
   const msg =
-`💰 <b>NEW perSUB ORDER!</b>
-${divider}
-📦 <b>Plan:</b> ${escapeHtml(data.plan)}
-💵 <b>Price:</b> ${escapeHtml(data.price)}
-👤 <b>User:</b> ${escapeHtml(data.username)}
-💳 <b>Method:</b> ${escapeHtml(data.method)}
-📝 <b>Reference/Proof:</b> ${escapeHtml(data.reference)}
-${divider}
-🕐 <b>Time:</b> ${ts}`;
+`🛒 <b>سفارش جدید perSUB</b> (از مرورگر)
+${D}
+👤 <b>یوزرنیم:</b> ${data.username}
+📞 <b>تلفن:</b> ${data.phone}
+📧 <b>ایمیل:</b> ${data.email}
+🏢 <b>حوزه کاری:</b> ${data.field}
+${D}
+📦 <b>پلن:</b> ${data.plan}
+💵 <b>مبلغ:</b> ${data.price}
+💳 <b>روش پرداخت:</b> ${data.method}
+🧾 <b>رسید:</b> ${data.reference}
+${D}
+📝 <b>توضیحات:</b>
+${data.botDesc}
+${D}
+🕐 ${ts}`;
+
+  const inline_keyboard = [
+    [{ text: '💬 ارتباط با خریدار', url: `https://t.me/${cleanUser}` }]
+  ];
 
   const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text: msg, parse_mode: 'HTML' })
+    body: JSON.stringify({
+      chat_id: ADMIN_CHAT_ID,
+      text: msg,
+      parse_mode: 'HTML',
+      reply_markup: { inline_keyboard }
+    })
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.description || `HTTP ${res.status}`);
   }
   return res.json();
-}
-
-async function handleCheckout(e) {
-  e.preventDefault();
-  const username  = document.getElementById('tg-username').value.trim();
-  const method    = document.getElementById('pay-method').value;
-  const reference = document.getElementById('tx-ref').value.trim();
-  const plan      = document.getElementById('modal-plan-name').textContent;
-  const price     = document.getElementById('modal-plan-price').textContent;
-
-  if (!username.startsWith('@')) {
-    showToast('⚠️ Telegram username must start with @', 'error');
-    document.getElementById('tg-username').focus();
-    return;
-  }
-
-  setLoading(true);
-  try {
-    await sendSalesNotificationToTelegram({ plan, price, username, method, reference });
-    showToast('✅ Order sent! We\'ll activate your bot shortly.');
-    closeModal();
-  } catch (err) {
-    console.error('Telegram error:', err);
-    showToast('❌ Notification failed. Check your Bot Token & Chat ID.', 'error');
-    setLoading(false);
-  }
 }
 </script>
 </body>
