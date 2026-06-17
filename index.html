@@ -196,14 +196,19 @@
 <!-- ═══════ CONFIG — EDIT THESE ═══════ -->
 <script>
   /*
-   * ⚠️  SECURITY WARNING ⚠️
-   * These credentials are visible in page source to anyone.
-   * For a public website, move the Telegram API call to a server-side
-   * endpoint (Node.js, Cloudflare Worker, etc.) and call that instead.
-   * For private/LAN use, this is acceptable.
+   * 🔧 تنظیم آدرس server.py
+   * ─────────────────────────────────────────────
+   * server.py رو روی سیستم خودت اجرا کن، بعد با ngrok عمومی کن:
+   *   ngrok http 5000
+   * آدرس https که ngrok میده رو اینجا بذار.
+   *
+   * مثال: "https://abc123.ngrok-free.app"
+   *
+   * توکن تلگرام دیگه اینجا نیست — امنیته! ✅
+   * همه چیز سمت server.py هندل میشه.
    */
-  const TELEGRAM_BOT_TOKEN = 'YOUR_TRACKING_BOT_TOKEN';   // ← عوض کن
-  const ADMIN_CHAT_ID      = 'YOUR_PERSONAL_CHAT_ID';     // ← عوض کن
+  const SERVER_API_URL = 'YOUR_NGROK_OR_SERVER_URL';   // ← عوض کن
+  //  مثال: 'https://abc123.ngrok-free.app'
 </script>
 
 <!-- ═══════ NAVBAR ═══════ -->
@@ -704,8 +709,10 @@
 <!-- Toast -->
 <div id="toast"></div>
 
+
 <!-- ═══════ JAVASCRIPT ═══════ -->
 <script>
+
 /* ── Modal ── */
 function openModal(planName, planPrice) {
   document.getElementById('modal-plan-name').textContent = planName;
@@ -740,20 +747,6 @@ function setLoading(on) {
   document.getElementById('submit-spinner').style.display = on ? 'flex' : 'none';
 }
 
-/* ══════════════════════════════════════════════════
-   روش ارسال داده:
-
-   ① داخل Telegram Mini App  → Telegram.WebApp.sendData(JSON)
-      داده مستقیم به handle_webapp_data در bot_perSub.py میره
-      ربات ذخیره دیتابیس + پیام ادمین + دکمه‌ها رو handle میکنه
-
-   ② باز شده در مرورگر معمولی → fetch به Telegram Bot API
-      (fallback — بدون دیتابیس، فقط پیام به ادمین)
-══════════════════════════════════════════════════ */
-
-const IS_TELEGRAM_WEBAPP = !!(window.Telegram && window.Telegram.WebApp
-                               && window.Telegram.WebApp.initData);
-
 /* ── Form submit ── */
 async function handleCheckout(e) {
   e.preventDefault();
@@ -774,87 +767,54 @@ async function handleCheckout(e) {
     return;
   }
 
-  const formData = { username, phone, email, field, method, reference, botDesc, plan, price };
+  if (!SERVER_API_URL || SERVER_API_URL.includes('YOUR_')) {
+    showToast('⚙️ آدرس سرور هنوز تنظیم نشده — SERVER_API_URL را وارد کنید', 'error');
+    return;
+  }
 
   setLoading(true);
   try {
-    if (IS_TELEGRAM_WEBAPP) {
-      /*
-       * ① Mini App mode
-       * داده JSON به ربات پایتون میره → handle_webapp_data
-       * ربات خودش دیتابیس رو آپدیت میکنه و پیام ادمین رو میفرسته
-       */
-      window.Telegram.WebApp.sendData(JSON.stringify(formData));
-      // sendData صفحه رو میبنده، پس toast لازم نیست
-    } else {
-      /*
-       * ② Browser fallback mode
-       * مستقیم به Telegram Bot API — بدون دیتابیس
-       * فقط پیام اطلاع‌رسانی به ادمین میفرسته
-       */
-      await sendFallbackNotification(formData);
-      showToast('✅ سفارش ثبت شد! تیم ما به زودی با شما تماس می‌گیرد.');
-      closeModal();
+    /*
+     * سفارش به server.py روی سیستم ادمین ارسال میشه.
+     * server.py:
+     *   ① سفارش رو توی MySQL ذخیره میکنه
+     *   ② پیام تلگرام با دکمه‌های تأیید / رد / ارتباط میفرسته
+     *   ③ callback های ادمین (تأیید/رد) رو از تلگرام handle میکنه
+     */
+    const res = await fetch(`${SERVER_API_URL}/order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        telegram_username: username,
+        phone, email,
+        field_of_work:   field,
+        plan_name:       plan,
+        plan_price:      price,
+        payment_method:  method,
+        tx_reference:    reference,
+        bot_description: botDesc,
+      })
+    });
+
+    const json = await res.json().catch(() => ({}));
+
+    if (!res.ok || json.ok === false) {
+      throw new Error(json.error || `خطای سرور: HTTP ${res.status}`);
     }
+
+    showToast('✅ سفارش ثبت شد! تیم ما به زودی با شما تماس می‌گیرد.');
+    closeModal();
+
   } catch (err) {
     console.error('Submit error:', err);
-    showToast('❌ خطا در ارسال. لطفاً دوباره امتحان کنید.', 'error');
+    // اگه سرور آفلاین بود یا URL اشتباه بود
+    if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
+      showToast('❌ سرور در دسترس نیست. لطفاً با پشتیبانی تماس بگیرید.', 'error');
+    } else {
+      showToast(`❌ ${err.message}`, 'error');
+    }
     setLoading(false);
   }
-}
-
-/* ── Fallback: fetch مستقیم به Telegram API (مرورگر عادی) ── */
-async function sendFallbackNotification(data) {
-  /*
-   * ⚠️  SECURITY WARNING
-   * این توکن در سورس کد قابل مشاهده است.
-   * فقط برای حالتی که سایت خارج از Mini App باز میشه استفاده میشه.
-   * در Mini App اصلی، توکن اینجا استفاده نمیشه.
-   */
-  const D  = '━━━━━━━━━━━━━━━━━━━━';
-  const ts = new Date().toLocaleString('fa-IR', {
-    year:'numeric', month:'long', day:'numeric',
-    hour:'2-digit', minute:'2-digit'
-  });
-  const cleanUser = data.username.replace(/^@/, '');
-
-  const msg =
-`🛒 <b>سفارش جدید perSUB</b> (از مرورگر)
-${D}
-👤 <b>یوزرنیم:</b> ${data.username}
-📞 <b>تلفن:</b> ${data.phone}
-📧 <b>ایمیل:</b> ${data.email}
-🏢 <b>حوزه کاری:</b> ${data.field}
-${D}
-📦 <b>پلن:</b> ${data.plan}
-💵 <b>مبلغ:</b> ${data.price}
-💳 <b>روش پرداخت:</b> ${data.method}
-🧾 <b>رسید:</b> ${data.reference}
-${D}
-📝 <b>توضیحات:</b>
-${data.botDesc}
-${D}
-🕐 ${ts}`;
-
-  const inline_keyboard = [
-    [{ text: '💬 ارتباط با خریدار', url: `https://t.me/${cleanUser}` }]
-  ];
-
-  const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: ADMIN_CHAT_ID,
-      text: msg,
-      parse_mode: 'HTML',
-      reply_markup: { inline_keyboard }
-    })
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.description || `HTTP ${res.status}`);
-  }
-  return res.json();
 }
 </script>
 </body>
