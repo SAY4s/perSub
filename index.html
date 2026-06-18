@@ -196,19 +196,28 @@
 <!-- ═══════ CONFIG — EDIT THESE ═══════ -->
 <script>
   /*
-   * 🔧 تنظیم آدرس server.py
+   * ⚠️  هشدار امنیتی  ⚠️
    * ─────────────────────────────────────────────
-   * server.py رو روی سیستم خودت اجرا کن، بعد با ngrok عمومی کن:
-   *   ngrok http 5000
-   * آدرس https که ngrok میده رو اینجا بذار.
+   * این توکن‌ها توی کد سایت قابل مشاهده هستن — هرکسی
+   * که "View Page Source" بزنه می‌تونه ببینه‌شون.
+   * این روش ساده‌ست (فقط GitHub Pages، بدون سرور جدا)
+   * ولی برای پروژه‌های حساس امن نیست.
    *
-   * مثال: "https://abc123.ngrok-free.app"
-   *
-   * توکن تلگرام دیگه اینجا نیست — امنیته! ✅
-   * همه چیز سمت server.py هندل میشه.
+   * حداقل کاری که باید بکنی: یوزرنیم ربات رو از @BotFather
+   * بگیر، عمومی نکن و فقط برای همین کار استفادش کن.
    */
-  const SERVER_API_URL = 'YOUR_NGROK_OR_SERVER_URL';   // ← عوض کن
-  //  مثال: 'https://abc123.ngrok-free.app'
+
+  // توکن ربات Sales Tracking (همون که پیام سفارش‌ها رو میفرسته)
+  const TELEGRAM_BOT_TOKEN = '8725654335:AAExIju-h1mMLzEiOzpvla3KzWKPbE004kM';   // ← عوض کن
+
+  // Chat ID ادمین (عدد) — جایی که دکمه‌های تأیید/رد میره
+  const ADMIN_CHAT_ID = '7633207763';             // ← عوض کن
+
+  // Chat ID کانال آرشیو (عدد، با -100 شروع میشه) — فقط بایگانی، بدون دکمه
+  // راهنما: ربات رو ادمین کانال کن، یه پیام تستی بفرست، بعد آدرس زیر رو
+  // با توکن واقعی باز کن و دنبال "chat":{"id": -100xxxxxxxxxx} بگرد:
+  //   https://api.telegram.org/bot<TOKEN>/getUpdates
+  const ARCHIVE_CHANNEL_ID = '-1004367162018';      // ← عوض کن
 </script>
 
 <!-- ═══════ NAVBAR ═══════ -->
@@ -748,6 +757,87 @@ function setLoading(on) {
 }
 
 /* ── Form submit ── */
+/* ── escape برای HTML تلگرام ── */
+function escTg(str) {
+  return String(str || '—')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/* ── ساخت پیام کامل برای ادمین (با دکمه) ── */
+function buildAdminMessage(o) {
+  const D = '━━━━━━━━━━━━━━━━━━━━';
+  return `🛒 <b>سفارش جدید perSUB</b>
+${D}
+👤 <b>یوزرنیم:</b> ${escTg(o.username)}
+📞 <b>تلفن:</b> ${escTg(o.phone)}
+📧 <b>ایمیل:</b> ${escTg(o.email)}
+🏢 <b>حوزه کاری:</b> ${escTg(o.field)}
+${D}
+📦 <b>پلن:</b> ${escTg(o.plan)}
+💵 <b>مبلغ:</b> ${escTg(o.price)}
+💳 <b>روش پرداخت:</b> ${escTg(o.method)}
+🧾 <b>رسید:</b> ${escTg(o.reference)}
+${D}
+📝 <b>توضیحات خریدار:</b>
+${escTg(o.botDesc)}
+${D}`;
+}
+
+/* ── ساخت پیام ساده برای آرشیو کانال (بدون دکمه) ── */
+function buildArchiveMessage(o) {
+  const D = '─────────────────';
+  return `📦 <b>سفارش perSUB</b>
+${D}
+👤 ${escTg(o.username)}
+📞 ${escTg(o.phone)}
+📧 ${escTg(o.email)}
+🏢 ${escTg(o.field)}
+📦 ${escTg(o.plan)}  ·  💵 ${escTg(o.price)}
+💳 ${escTg(o.method)}
+🧾 ${escTg(o.reference)}
+📝 ${escTg(o.botDesc)}`;
+}
+
+/* ── دکمه‌های تأیید/رد/ارتباط ── */
+function buildKeyboard(username) {
+  const clean = username.replace(/^@/, '');
+  return {
+    inline_keyboard: [
+      [
+        { text: '✅ تأیید سفارش', callback_data: `approve_${clean}` },
+        { text: '❌ رد سفارش',    callback_data: `reject_${clean}` }
+      ],
+      [
+        { text: '💬 ارتباط با خریدار', url: `https://t.me/${clean}` }
+      ]
+    ]
+  };
+}
+
+/* ── ارسال پیام به تلگرام ── */
+async function tgSendMessage(chatId, text, replyMarkup) {
+  const payload = {
+    chat_id: chatId,
+    text: text,
+    parse_mode: 'HTML'
+  };
+  if (replyMarkup) payload.reply_markup = replyMarkup;
+
+  const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.description || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
 async function handleCheckout(e) {
   e.preventDefault();
 
@@ -767,62 +857,46 @@ async function handleCheckout(e) {
     return;
   }
 
-  if (!SERVER_API_URL || SERVER_API_URL.includes('YOUR_')) {
-    showToast('⚙️ آدرس سرور هنوز تنظیم نشده — SERVER_API_URL را وارد کنید', 'error');
+  if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN.includes('YOUR_')) {
+    showToast('⚙️ توکن ربات هنوز تنظیم نشده — TELEGRAM_BOT_TOKEN را وارد کنید', 'error');
     return;
   }
 
   setLoading(true);
+
+  const orderData = { username, phone, email, field, method, reference, botDesc, plan, price };
+
   try {
     /*
-     * سفارش به server.py روی سیستم ادمین ارسال میشه.
-     * server.py:
-     *   ① پیام کامل با دکمه تأیید/رد/ارتباط به ادمین میفرسته
-     *   ② یه نسخه ساده برای بایگانی به کانال آرشیو میفرسته
-     *   ③ callback های ادمین (تأیید/رد) رو از تلگرام handle میکنه
+     * این روش کاملاً سمت کلاینت (بدون سرور) اجرا میشه:
+     *   ① پیام کامل با دکمه تأیید/رد/ارتباط مستقیم به ادمین فرستاده میشه
+     *   ② یه نسخه ساده برای بایگانی به کانال آرشیو فرستاده میشه
      *
-     * نکته: هدر localtonet-skip-warning لازمه چون localtonet (رایگان)
-     * یه صفحه هشدار interstitial قبل از رسیدن به سرور واقعی نشون میده.
-     * این هدر باعث میشه مستقیم به API برسیم.
+     * توجه: چون دکمه‌های تأیید/رد callback_query میسازن و هیچ سروری
+     * برای handle کردنشون وجود نداره، با کلیک روی این دکمه‌ها در تلگرام
+     * فقط یک "loading" نشون داده میشه و واکنشی رخ نمیده. برای دیدن
+     * اطلاعات خریدار و تماس باهاش، از روی همون پیام (متن کامل سفارش)
+     * و دکمه «ارتباط با خریدار» که مستقیم لینک t.me است استفاده کن.
      */
-    const res = await fetch(`${SERVER_API_URL}/order`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'localtonet-skip-warning': '1'
-      },
-      body: JSON.stringify({
-        telegram_username: username,
-        phone, email,
-        field_of_work:   field,
-        plan_name:       plan,
-        plan_price:      price,
-        payment_method:  method,
-        tx_reference:    reference,
-        bot_description: botDesc,
-      })
-    });
+    await tgSendMessage(ADMIN_CHAT_ID, buildAdminMessage(orderData), buildKeyboard(username));
 
-    const json = await res.json().catch(() => ({}));
-
-    if (!res.ok || json.ok === false) {
-      throw new Error(json.error || `خطای سرور: HTTP ${res.status}`);
+    // پیام آرشیو به کانال — اگه fail شد مهم نیست، پیام اصلی ادمین رفته
+    try {
+      await tgSendMessage(ARCHIVE_CHANNEL_ID, buildArchiveMessage(orderData));
+    } catch (archiveErr) {
+      console.warn('Archive message failed:', archiveErr);
     }
 
     showToast('✅ سفارش ثبت شد! تیم ما به زودی با شما تماس می‌گیرد.');
     closeModal();
 
   } catch (err) {
-    console.error('Submit error:', err);
-    // اگه سرور آفلاین بود یا URL اشتباه بود
-    if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError')) {
-      showToast('❌ سرور در دسترس نیست. لطفاً با پشتیبانی تماس بگیرید.', 'error');
-    } else {
-      showToast(`❌ ${err.message}`, 'error');
-    }
+    console.error('Telegram error:', err);
+    showToast('❌ ارسال ناموفق بود. توکن یا Chat ID را بررسی کنید.', 'error');
     setLoading(false);
   }
 }
+
 </script>
 </body>
 </html>
