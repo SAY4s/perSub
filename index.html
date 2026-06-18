@@ -207,7 +207,7 @@
    * توکن تلگرام دیگه اینجا نیست — امنیته! ✅
    * همه چیز سمت server.py هندل میشه.
    */
-  const SERVER_API_URL = 'https://fgc9jvg6um.localto.net';   // ← عوض کن
+  const SERVER_API_URL = 'YOUR_NGROK_OR_SERVER_URL';   // ← عوض کن
   //  مثال: 'https://abc123.ngrok-free.app'
 </script>
 
@@ -777,13 +777,20 @@ async function handleCheckout(e) {
     /*
      * سفارش به server.py روی سیستم ادمین ارسال میشه.
      * server.py:
-     *   ① سفارش رو توی MySQL ذخیره میکنه
-     *   ② پیام تلگرام با دکمه‌های تأیید / رد / ارتباط میفرسته
+     *   ① پیام کامل با دکمه تأیید/رد/ارتباط به ادمین میفرسته
+     *   ② یه نسخه ساده برای بایگانی به کانال آرشیو میفرسته
      *   ③ callback های ادمین (تأیید/رد) رو از تلگرام handle میکنه
+     *
+     * نکته: هدر localtonet-skip-warning لازمه چون localtonet (رایگان)
+     * یه صفحه هشدار interstitial قبل از رسیدن به سرور واقعی نشون میده.
+     * این هدر باعث میشه مستقیم به API برسیم.
      */
     const res = await fetch(`${SERVER_API_URL}/order`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'localtonet-skip-warning': '1'
+      },
       body: JSON.stringify({
         telegram_username: username,
         phone, email,
