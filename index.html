@@ -136,12 +136,15 @@ nav{position:sticky;top:0;z-index:50;
 .pkg-card::before{
   content:'';position:absolute;inset:0;border-radius:18px;opacity:0;
   background:linear-gradient(135deg,rgba(59,130,246,.08) 0%,rgba(6,182,212,.05) 100%);
-  transition:opacity .3s;
+  transition:opacity .3s;pointer-events:none;
 }
 .pkg-card:hover{border-color:rgba(59,130,246,.5);transform:translateY(-5px);
   box-shadow:0 20px 60px rgba(0,0,0,.4);}
 .pkg-card:hover::before{opacity:1;}
 .pkg-card.featured{border-color:var(--blue);background:linear-gradient(160deg,#0d1829 0%,#0a1525 100%);}
+
+/* محتوای داخل کارت باید بالای لایه ::before باشه */
+.pkg-card > *{position:relative;z-index:1;}
 
 .pkg-icon{
   width:50px;height:50px;border-radius:14px;
@@ -164,7 +167,8 @@ nav{position:sticky;top:0;z-index:50;
 .pkg-price .old{font-size:.82rem;color:var(--dim);text-decoration:line-through;margin-right:.25rem;}
 .pkg-badge{position:absolute;top:1.25rem;left:1.5rem;
   background:var(--blue);color:#fff;font-size:.68rem;font-weight:700;
-  letter-spacing:.06em;text-transform:uppercase;padding:.25rem .7rem;border-radius:999px;}
+  letter-spacing:.06em;text-transform:uppercase;padding:.25rem .7rem;border-radius:999px;
+  pointer-events:none;z-index:2;}
 
 /* ── How it works ── */
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;margin-top:3rem;}
