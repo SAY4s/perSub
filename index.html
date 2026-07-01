@@ -1,721 +1,659 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>perSUB — Telegram Subscription Bot</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>pery — Telegram Bots, Built for You</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --accent: #7c3aed;
-    --accent-bright: #a78bfa;
-    --accent-dim: #4c1d95;
-    --neon: #06b6d4;
-    --surface: #0c0c1a;
-    --surface2: #12122a;
-    --surface3: #1a1a38;
-    --border: rgba(124,58,237,0.22);
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --dimmer: #475569;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: 'Inter', sans-serif;
-    background: var(--surface);
-    color: var(--text);
-    overflow-x: hidden;
-  }
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(124,58,237,0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(124,58,237,0.035) 1px, transparent 1px);
-    background-size: 56px 56px;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .glow-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(110px);
-    pointer-events: none;
-    z-index: 0;
-  }
-  section, header, footer { position: relative; z-index: 1; }
+:root {
+  --bg:       #080b12;
+  --bg2:      #0d1120;
+  --bg3:      #111827;
+  --blue:     #3b82f6;
+  --blue-d:   #2563eb;
+  --blue-g:   rgba(59,130,246,0.12);
+  --cyan:     #06b6d4;
+  --border:   rgba(59,130,246,0.18);
+  --text:     #f1f5f9;
+  --muted:    #94a3b8;
+  --dim:      #475569;
+  --r:        12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
 
-  .hero-headline {
-    font-size: clamp(2rem, 5.5vw, 4.2rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.08;
-  }
-  .gradient-text {
-    background: linear-gradient(135deg, #a78bfa 0%, #06b6d4 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .mono { font-family: 'JetBrains Mono', monospace; }
+/* ── Grid bg ── */
+body::before{content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(59,130,246,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(59,130,246,0.04) 1px,transparent 1px);
+  background-size:52px 52px;pointer-events:none;z-index:0;}
 
-  .glass-card {
-    background: rgba(18,18,42,0.75);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    backdrop-filter: blur(12px);
-    transition: border-color 0.3s, transform 0.3s;
-  }
-  .glass-card:hover { border-color: rgba(124,58,237,0.5); transform: translateY(-4px); }
+section,header,footer{position:relative;z-index:1;}
 
-  .pricing-card {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-  .pricing-card.featured { border-color: var(--accent); background: linear-gradient(160deg,#16103a 0%,#0d1a2e 100%); }
-  .pricing-card.featured::before {
-    content:'';position:absolute;inset:0;border-radius:20px;
-    background:linear-gradient(135deg,rgba(124,58,237,0.12) 0%,rgba(6,182,212,0.07) 100%);
-    pointer-events:none;
-  }
-  .pricing-card:hover { transform: translateY(-6px); }
+/* ── Type ── */
+.display{font-family:'Space Grotesk',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.06;}
+.g-text{background:linear-gradient(130deg,#fff 0%,var(--blue) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.mono{font-family:'Space Grotesk',monospace;font-size:.8rem;letter-spacing:.04em;}
 
-  .btn-primary {
-    background: linear-gradient(135deg,var(--accent) 0%,#5b21b6 100%);
-    color:#fff;border:none;border-radius:10px;font-weight:600;font-size:0.95rem;
-    cursor:pointer;transition:all .25s;position:relative;overflow:hidden;
-  }
-  .btn-primary::after { content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background .2s; }
-  .btn-primary:hover::after { background:rgba(255,255,255,0.08); }
-  .btn-primary:active { transform:scale(0.98); }
+/* ── Navbar ── */
+nav{position:sticky;top:0;z-index:50;
+  background:rgba(8,11,18,0.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1160px;margin:0 auto;padding:.85rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;}
+.logo-mark{width:32px;height:32px;border-radius:8px;
+  background:var(--blue);display:flex;align-items:center;justify-content:center;}
+.logo-name{font-family:'Space Grotesk',sans-serif;font-weight:700;
+  font-size:1.2rem;color:#fff;letter-spacing:-.02em;}
+.nav-links{display:flex;align-items:center;gap:2rem;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.88rem;
+  font-weight:500;transition:color .2s;}
+.nav-links a:hover{color:#fff;}
+@media(max-width:640px){.nav-links{display:none;}}
 
-  .btn-neon {
-    background:transparent;color:var(--neon);border:1px solid var(--neon);
-    border-radius:10px;font-weight:600;font-size:0.95rem;cursor:pointer;transition:all .25s;
-  }
-  .btn-neon:hover { background:rgba(6,182,212,0.1); box-shadow:0 0 24px rgba(6,182,212,0.18); }
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;
+  border:none;border-radius:var(--r);font-family:'Space Grotesk',sans-serif;
+  font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn:active{transform:scale(.98);}
+.btn-primary{background:var(--blue);color:#fff;padding:.7rem 1.4rem;font-size:.92rem;}
+.btn-primary:hover{background:var(--blue-d);box-shadow:0 0 24px rgba(59,130,246,.35);}
+.btn-lg{padding:.9rem 2rem;font-size:1rem;}
+.btn-ghost{background:transparent;border:1px solid var(--border);
+  color:var(--text);padding:.7rem 1.4rem;font-size:.92rem;}
+.btn-ghost:hover{border-color:var(--blue);color:#fff;}
 
-  .badge {
-    display:inline-block;background:rgba(6,182,212,0.1);color:var(--neon);
-    border:1px solid rgba(6,182,212,0.28);border-radius:999px;
-    font-size:0.73rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:4px 14px;
-  }
-  .badge-purple {
-    background:rgba(124,58,237,0.14);color:var(--accent-bright);border-color:rgba(124,58,237,0.32);
-  }
+/* ── Hero ── */
+.hero{padding:7rem 1.5rem 5rem;text-align:center;overflow:hidden;position:relative;}
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  display:grid;grid-template-columns:repeat(8,1fr);
+  grid-template-rows:repeat(5,1fr);
+  opacity:.06;pointer-events:none;padding:2rem;gap:1.5rem;
+}
+.hero-grid-icon{
+  display:flex;align-items:center;justify-content:center;
+  animation:float linear infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.hero-content{position:relative;z-index:1;max-width:820px;margin:0 auto;}
+.badge{display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.28);
+  border-radius:999px;padding:.35rem 1rem;
+  font-size:.76rem;font-weight:600;color:var(--blue);
+  letter-spacing:.05em;text-transform:uppercase;margin-bottom:1.5rem;}
+.hero-title{font-size:clamp(2.4rem,6.5vw,5rem);margin-bottom:1.1rem;}
+.hero-sub{font-size:1.1rem;color:var(--muted);line-height:1.75;
+  max-width:560px;margin:0 auto 2.5rem;}
+.hero-sub em{font-style:normal;color:var(--text);}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-bottom:3.5rem;}
 
-  /* terminal block */
-  .terminal {
-    background:#08080f;border:1px solid rgba(124,58,237,0.3);border-radius:12px;padding:1.25rem 1.5rem;
-    font-family:'JetBrains Mono',monospace;font-size:0.82rem;line-height:1.9;
-  }
-  .t-green { color:#4ade80; }
-  .t-cyan  { color:#67e8f9; }
-  .t-purple{ color:#c4b5fd; }
-  .t-dim   { color:#475569; }
+/* ── Packages ── */
+.section{padding:5rem 1.5rem;}
+.section-inner{max-width:1160px;margin:0 auto;}
+.eyebrow{font-size:.72rem;font-weight:700;color:var(--blue);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;}
+.section-title{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.7rem,3.5vw,2.5rem);
+  font-weight:700;letter-spacing:-.02em;margin-bottom:.6rem;}
+.section-sub{color:var(--muted);font-size:.95rem;line-height:1.7;max-width:520px;}
 
-  /* modal */
-  #modal-overlay {
-    position:fixed;inset:0;background:rgba(5,5,18,0.88);backdrop-filter:blur(8px);
-    z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;
-    opacity:0;pointer-events:none;transition:opacity .3s;
-  }
-  #modal-overlay.open { opacity:1;pointer-events:all; }
-  #modal-box {
-    background:var(--surface2);border:1px solid var(--border);border-radius:20px;
-    width:100%;max-width:490px;transform:translateY(18px) scale(0.97);transition:transform .3s;
-    position:relative;max-height:90vh;overflow-y:auto;
-  }
-  #modal-overlay.open #modal-box { transform:translateY(0) scale(1); }
+.packages-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:1.25rem;
+  margin-top:3rem;
+}
 
-  .field-label {
-    display:block;font-size:0.78rem;font-weight:600;color:var(--muted);margin-bottom:5px;
-    letter-spacing:0.05em;text-transform:uppercase;
-  }
-  .field-input {
-    width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(124,58,237,0.22);
-    border-radius:10px;padding:11px 14px;color:var(--text);font-size:0.92rem;
-    font-family:'Inter',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;
-    -webkit-appearance:none;
-  }
-  .field-input:focus { border-color:var(--accent-bright);box-shadow:0 0 0 3px rgba(124,58,237,0.14); }
-  .field-input::placeholder { color:var(--dimmer); }
-  select.field-input option { background:#1a1a35; }
+/* پنج کارت — دو تا آخر وسط چین می‌شن */
+.packages-grid > *:nth-child(4){grid-column:1;}
+.packages-grid > *:nth-child(5){grid-column:2;}
+@media(min-width:900px) and (max-width:1159px){
+  .packages-grid{grid-template-columns:repeat(2,1fr);}
+  .packages-grid > *:nth-child(4){grid-column:1;}
+  .packages-grid > *:nth-child(5){grid-column:2;}
+}
+@media(max-width:900px){
+  .packages-grid{grid-template-columns:1fr;}
+  .packages-grid > *:nth-child(4),.packages-grid > *:nth-child(5){grid-column:1;}
+}
 
-  .spin {
-    display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.2);
-    border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;
-  }
-  @keyframes spin { to { transform:rotate(360deg); } }
+.pkg-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:2rem 1.75rem;
+  display:flex;flex-direction:column;
+  transition:border-color .3s,transform .3s,box-shadow .3s;
+  position:relative;overflow:hidden;
+}
+.pkg-card::before{
+  content:'';position:absolute;inset:0;border-radius:18px;opacity:0;
+  background:linear-gradient(135deg,rgba(59,130,246,.08) 0%,rgba(6,182,212,.05) 100%);
+  transition:opacity .3s;
+}
+.pkg-card:hover{border-color:rgba(59,130,246,.5);transform:translateY(-5px);
+  box-shadow:0 20px 60px rgba(0,0,0,.4);}
+.pkg-card:hover::before{opacity:1;}
+.pkg-card.featured{border-color:var(--blue);background:linear-gradient(160deg,#0d1829 0%,#0a1525 100%);}
 
-  #toast {
-    position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);
-    background:var(--surface3);border:1px solid var(--border);border-radius:12px;
-    padding:13px 22px;font-size:0.88rem;font-weight:500;z-index:200;
-    transition:transform .4s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;
-  }
-  #toast.show { transform:translateX(-50%) translateY(0); }
-  #toast.success { border-color:#22c55e;color:#86efac; }
-  #toast.error   { border-color:#ef4444;color:#fca5a5; }
+.pkg-icon{
+  width:50px;height:50px;border-radius:14px;
+  background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.25);
+  display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;
+  flex-shrink:0;
+}
+.pkg-name{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;
+  font-weight:700;margin-bottom:.4rem;}
+.pkg-desc{color:var(--muted);font-size:.88rem;line-height:1.7;margin-bottom:1.25rem;flex:1;}
+.pkg-features{list-style:none;display:flex;flex-direction:column;
+  gap:.55rem;margin-bottom:1.75rem;}
+.pkg-features li{display:flex;align-items:flex-start;gap:.6rem;
+  font-size:.85rem;color:var(--muted);}
+.pkg-features li svg{flex-shrink:0;margin-top:2px;}
+.pkg-price{display:flex;align-items:baseline;gap:.3rem;margin-bottom:1.25rem;}
+.pkg-price .amount{font-family:'Space Grotesk',sans-serif;font-size:2rem;
+  font-weight:800;color:#fff;}
+.pkg-price .unit{color:var(--muted);font-size:.85rem;}
+.pkg-price .old{font-size:.82rem;color:var(--dim);text-decoration:line-through;margin-right:.25rem;}
+.pkg-badge{position:absolute;top:1.25rem;left:1.5rem;
+  background:var(--blue);color:#fff;font-size:.68rem;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;padding:.25rem .7rem;border-radius:999px;}
 
-  .stat-item { border-right:1px solid var(--border); }
-  .stat-item:last-child { border-right:none; }
+/* ── How it works ── */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;margin-top:3rem;}
+.step{position:relative;}
+.step-num{
+  width:40px;height:40px;border-radius:12px;
+  background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);
+  display:flex;align-items:center;justify-content:center;margin-bottom:1rem;
+  font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:700;color:var(--blue);
+}
+.step h3{font-family:'Space Grotesk',sans-serif;font-weight:700;margin-bottom:.4rem;}
+.step p{color:var(--muted);font-size:.88rem;line-height:1.65;}
 
-  .ribbon {
-    position:absolute;top:18px;right:-28px;
-    background:linear-gradient(135deg,var(--neon),#0284c7);
-    color:#fff;font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
-    padding:4px 36px;transform:rotate(35deg);width:130px;text-align:center;
-  }
-  .step-num {
-    width:32px;height:32px;border-radius:50%;border:1px solid var(--accent-bright);
-    display:flex;align-items:center;justify-content:center;
-    font-size:0.78rem;font-weight:700;color:var(--accent-bright);flex-shrink:0;
-  }
+/* ── Support ── */
+.support-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;margin-top:2.5rem;}
+.support-card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;
+  padding:1.75rem;text-align:center;transition:border-color .3s,transform .3s;}
+.support-card:hover{border-color:rgba(59,130,246,.45);transform:translateY(-4px);}
+.support-card h3{font-family:'Space Grotesk',sans-serif;font-weight:700;margin-bottom:.5rem;margin-top:1rem;}
+.support-card p{color:var(--muted);font-size:.85rem;line-height:1.6;margin-bottom:1.1rem;}
+.support-icon{width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;margin:0 auto;}
 
-  ::-webkit-scrollbar { width:5px; }
-  ::-webkit-scrollbar-thumb { background:var(--border);border-radius:3px; }
+/* ── Modal ── */
+#modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);
+  backdrop-filter:blur(10px);z-index:100;display:flex;
+  align-items:center;justify-content:center;padding:1rem;
+  opacity:0;pointer-events:none;transition:opacity .3s;}
+#modal-overlay.open{opacity:1;pointer-events:all;}
+#modal-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;
+  width:100%;max-width:500px;transform:translateY(16px) scale(.97);
+  transition:transform .3s;max-height:90vh;overflow-y:auto;}
+#modal-overlay.open #modal-box{transform:translateY(0) scale(1);}
+.modal-head{padding:1.4rem 1.5rem;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;}
+.modal-plan-pill{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);
+  border-radius:12px;padding:.9rem 1.1rem;margin:1.1rem 1.5rem;
+  display:flex;justify-content:space-between;align-items:center;}
+.modal-plan-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.95rem;}
+.modal-plan-price{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.5rem;
+  background:linear-gradient(130deg,#fff,var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.modal-form{padding:0 1.5rem 1.5rem;}
+.field-wrap{margin-bottom:1rem;}
+.field-label{display:block;font-size:.77rem;font-weight:600;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem;}
+.field-sub{font-size:.73rem;color:var(--dim);margin-bottom:.4rem;}
+.field-input{width:100%;background:rgba(255,255,255,.04);border:1.5px solid var(--border);
+  border-radius:10px;padding:.8rem 1rem;color:var(--text);font-size:.92rem;
+  font-family:'Inter',sans-serif;outline:none;transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;}
+.field-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.14);}
+.field-input::placeholder{color:var(--dim);}
+select.field-input option{background:#111827;}
+textarea.field-input{resize:vertical;min-height:90px;}
+.close-btn{background:rgba(255,255,255,.05);border:1px solid var(--border);
+  border-radius:8px;width:32px;height:32px;cursor:pointer;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.close-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
 
-  .rtl { direction:rtl;font-family:Tahoma,Arial,sans-serif; }
+/* ── Spin / Toast ── */
+.spin{display:inline-block;width:16px;height:16px;
+  border:2px solid rgba(255,255,255,.2);border-top-color:#fff;
+  border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#toast{position:fixed;bottom:2rem;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--bg3);border:1px solid var(--border);border-radius:12px;
+  padding:.8rem 1.4rem;font-size:.86rem;font-weight:500;z-index:200;
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.success{border-color:#22c55e;color:#86efac;}
+#toast.error{border-color:#ef4444;color:#fca5a5;}
 
-  @media(max-width:640px){
-    .hero-headline{font-size:2rem;}
-    .stat-item{border-right:none;border-bottom:1px solid var(--border);}
-  }
+/* ── Footer ── */
+footer{border-top:1px solid var(--border);padding:2.5rem 1.5rem;text-align:center;}
+footer p{color:var(--dim);font-size:.8rem;line-height:1.8;}
+
+@media(max-width:640px){
+  .hero{padding:5rem 1.25rem 4rem;}
+  .section{padding:4rem 1.25rem;}
+}
 </style>
 </head>
 <body>
 
-<!-- ═══════ Telegram Mini App SDK ═══════ -->
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- CONFIG -->
 <script>
   /*
-   * 🤖 این سایت به عنوان Telegram Mini App اجرا میشه
-   * ─────────────────────────────────────────────
-   * دیگه نیازی به توکن ربات یا Chat ID توی کد سایت نیست!
-   * چون سایت همیشه از داخل ربات (دکمه "Buy perSub Subscriptions")
-   * باز میشه، می‌تونیم از Telegram.WebApp.sendData() استفاده کنیم
-   * که داده رو مستقیم و امن به همون ربات (bot_perSub.py) می‌فرسته.
-   *
-   * bot_perSub.py با handle_webapp_data این داده رو می‌گیره،
-   * پیام با دکمه تأیید/رد می‌سازه، و خودش (با polling، بدون نیاز
-   * به سرور یا tunnel) callback های ادمین رو هم handle می‌کنه.
+   * ⚠️  هشدار امنیتی: این توکن در سورس صفحه قابل مشاهده است.
+   * برای محیط production، درخواست را از طریق یک سرور میانی بفرستید.
    */
-  const tg = window.Telegram?.WebApp;
-  if (tg) {
-    tg.ready();
-    tg.expand();
-  }
+  const TELEGRAM_BOT_TOKEN  = 'YOUR_TRACKING_BOT_TOKEN';   // ← عوض کن
+  const ADMIN_CHAT_ID       = 'YOUR_ADMIN_CHAT_ID';         // ← عوض کن
+  const ARCHIVE_CHANNEL_ID  = 'YOUR_CHANNEL_CHAT_ID';       // ← عوض کن
 </script>
 
-<!-- ═══════ NAVBAR ═══════ -->
-<header style="border-bottom:1px solid rgba(124,58,237,0.18);position:sticky;top:0;z-index:50;background:rgba(12,12,26,0.92);backdrop-filter:blur(16px);">
-  <div style="max-width:1100px;margin:0 auto;padding:.9rem 1.25rem;display:flex;align-items:center;justify-content:space-between;">
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--neon));display:flex;align-items:center;justify-content:center;">
-        <!-- Telegram-style icon -->
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21.2 4.2L2.6 11.4c-1.2.5-1.2 1.2-.2 1.5l4.6 1.4 1.8 5.4c.2.7.5.9 1 .9.4 0 .6-.2.9-.5l2.2-2.2 4.5 3.3c.8.5 1.4.2 1.6-.8l2.8-13.3c.3-1.3-.4-1.9-1.6-1.4z" fill="#fff"/></svg>
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21.2 4.2L2.6 11.4c-1.2.5-1.2 1.2-.2 1.5l4.6 1.4 1.8 5.4c.2.7.5.9 1 .9.4 0 .6-.2.9-.5l2.2-2.2 4.5 3.3c.8.5 1.4.2 1.6-.8l2.8-13.3c.3-1.3-.4-1.9-1.6-1.4z" fill="#fff"/></svg>
       </div>
-      <span style="font-weight:800;font-size:1.1rem;letter-spacing:-0.03em;">per<span class="gradient-text">SUB</span></span>
+      <span class="logo-name">pery</span>
+    </a>
+    <div class="nav-links">
+      <a href="#packages">Packages</a>
+      <a href="#how">How it works</a>
+      <a href="#support">Support</a>
     </div>
-    <nav style="display:flex;align-items:center;gap:2rem;">
-      <a href="#features" style="color:var(--muted);text-decoration:none;font-size:0.88rem;transition:color .2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='var(--muted)'">Features</a>
-      <a href="#how" style="color:var(--muted);text-decoration:none;font-size:0.88rem;transition:color .2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='var(--muted)'">How it works</a>
-      <a href="#pricing" style="color:var(--muted);text-decoration:none;font-size:0.88rem;transition:color .2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='var(--muted)'">Pricing</a>
-      <a href="#support" style="color:var(--muted);text-decoration:none;font-size:0.88rem;transition:color .2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='var(--muted)'">پشتیبانی</a>
-    </nav>
-    <button class="btn-primary" style="padding:.55rem 1.3rem;" onclick="openModal('perSUB ماهانه','۱۴۹ تومان')">Get Started →</button>
+    <button class="btn btn-primary" onclick="document.getElementById('packages').scrollIntoView({behavior:'smooth'})">
+      See Packages →
+    </button>
   </div>
-</header>
+</nav>
 
-<!-- ═══════ HERO ═══════ -->
-<section style="padding:5.5rem 1.25rem 4.5rem;text-align:center;position:relative;overflow:hidden;">
-  <div class="glow-orb" style="width:480px;height:480px;background:rgba(124,58,237,0.16);top:-160px;left:50%;transform:translateX(-50%);"></div>
-  <div class="glow-orb" style="width:280px;height:280px;background:rgba(6,182,212,0.1);bottom:-80px;right:8%;"></div>
-  <div style="max-width:820px;margin:0 auto;position:relative;">
+<!-- HERO -->
+<section class="hero">
+  <!-- Ambient bot-grid background -->
+  <div class="hero-grid" aria-hidden="true" id="hero-grid"></div>
 
-    <div class="badge" style="margin-bottom:1.4rem;">🤖 Telegram Subscription Automation Bot</div>
+  <div class="glow" style="width:500px;height:400px;background:rgba(59,130,246,.14);top:-120px;left:50%;transform:translateX(-50%);"></div>
+  <div class="glow" style="width:300px;height:300px;background:rgba(6,182,212,.08);bottom:0;right:5%;"></div>
 
-    <h1 class="hero-headline" style="margin-bottom:1rem;">
-      Sell Access.<br/>
-      <span class="gradient-text">Automate Everything.</span>
+  <div class="hero-content">
+    <div class="badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+      Telegram Automation Studio
+    </div>
+
+    <h1 class="display hero-title">
+      Bots that work<br/>
+      <span class="g-text">while you sleep.</span>
     </h1>
 
-    <p class="rtl" style="font-size:1rem;color:var(--accent-bright);margin-bottom:.6rem;">
-      اشتراک بفروش. همه چیز را خودکار کن.
+    <p class="hero-sub">
+      pery builds <em>custom Telegram bots</em> for selling, subscriptions,
+      content locks, quizzes, and support — delivered fast, configured for you.
     </p>
 
-    <p style="font-size:1.05rem;color:var(--muted);max-width:560px;margin:0 auto 2.2rem;line-height:1.75;">
-      <strong style="color:var(--text);">perSUB</strong> is a Telegram bot that lets you sell subscriptions
-      to your private channels or groups — automatically. No coding. No manual adds. Just link, sell, and grow.
-    </p>
-    <p class="rtl" style="font-size:0.88rem;color:var(--dimmer);max-width:500px;margin:0 auto 2.5rem;line-height:1.8;">
-      ربات perSUB به شما امکان می‌دهد اشتراک کانال‌ها یا گروه‌های خصوصی تلگرام خود را به صورت کاملاً خودکار بفروشید و مدیریت کنید.
-    </p>
-
-    <div style="display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;">
-      <button class="btn-primary" style="padding:.85rem 2rem;font-size:1rem;" onclick="openModal('perSUB ماهانه','۱۴۹ تومان')">
-        🚀 همین الان بخر — ۱۴۹ تومان
+    <div class="hero-ctas">
+      <button class="btn btn-primary btn-lg" onclick="document.getElementById('packages').scrollIntoView({behavior:'smooth'})">
+        Browse Packages
       </button>
-      <button class="btn-neon" style="padding:.85rem 2rem;font-size:1rem;" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">
-        See How It Works
+      <button class="btn btn-ghost btn-lg" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">
+        How it works
       </button>
     </div>
 
-    <!-- Stats -->
-    <div class="glass-card" style="max-width:680px;margin:3.5rem auto 0;">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);padding:1.4rem 0;">
-        <div class="stat-item" style="text-align:center;padding:0 1rem;">
-          <div style="font-size:1.9rem;font-weight:800;" class="gradient-text">100%</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.05em;">Automated</div>
-        </div>
-        <div class="stat-item" style="text-align:center;padding:0 1rem;">
-          <div style="font-size:1.9rem;font-weight:800;" class="gradient-text">∞</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.05em;">Channels / Plans</div>
-        </div>
-        <div class="stat-item" style="text-align:center;padding:0 1rem;">
-          <div style="font-size:1.9rem;font-weight:800;" class="gradient-text">24/7</div>
-          <div style="font-size:0.75rem;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.05em;">Uptime</div>
-        </div>
+    <!-- Quick stats -->
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:2.5rem;padding-top:1rem;">
+      <div style="text-align:center;">
+        <div class="display" style="font-size:2rem;color:#fff;">5</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;">Bot types</div>
+      </div>
+      <div style="width:1px;background:var(--border);"></div>
+      <div style="text-align:center;">
+        <div class="display" style="font-size:2rem;color:#fff;">24h</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;">Delivery</div>
+      </div>
+      <div style="width:1px;background:var(--border);"></div>
+      <div style="text-align:center;">
+        <div class="display" style="font-size:2rem;color:#fff;">∞</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:.2rem;">Customizable</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════ FEATURES ═══════ -->
-<section id="features" style="padding:5rem 1.25rem;">
-  <div style="max-width:1100px;margin:0 auto;">
-    <div style="text-align:center;margin-bottom:3.5rem;">
-      <div class="badge badge-purple" style="margin-bottom:1rem;">What perSUB Does</div>
-      <h2 style="font-size:2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem;">
-        Your subscription business, <span class="gradient-text">on autopilot</span>
-      </h2>
-      <p class="rtl" style="color:var(--muted);">کسب‌وکار اشتراکی شما، روی اتوپایلوت</p>
-    </div>
+<!-- PACKAGES -->
+<section class="section" id="packages">
+  <div class="section-inner">
+    <div class="eyebrow">Packages</div>
+    <h2 class="section-title">Pick your bot.</h2>
+    <p class="section-sub">Every package includes full setup, configuration, and a dedicated admin panel inside Telegram.</p>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;">
+    <div class="packages-grid">
 
-      <!-- 1 -->
-      <div class="glass-card" style="padding:1.75rem;">
-        <div style="width:46px;height:46px;border-radius:13px;background:rgba(124,58,237,0.16);border:1px solid rgba(124,58,237,0.32);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;">
-          <svg width="22" height="22" fill="none" stroke="var(--accent-bright)" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <!-- 1: Sales Bot -->
+      <div class="pkg-card">
+        <div class="pkg-icon">
+          <svg width="24" height="24" fill="none" stroke="#3b82f6" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
         </div>
-        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.4rem;">Auto Access Management</h3>
-        <p class="rtl" style="font-size:0.78rem;color:var(--accent-bright);margin-bottom:.5rem;">مدیریت خودکار دسترسی</p>
-        <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;">
-          Users are added to your channel instantly after payment — and automatically <strong style="color:var(--text);">removed when their subscription expires</strong>. No human needed.
-        </p>
-      </div>
-
-      <!-- 2 -->
-      <div class="glass-card" style="padding:1.75rem;">
-        <div style="width:46px;height:46px;border-radius:13px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.28);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;">
-          <svg width="22" height="22" fill="none" stroke="var(--neon)" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        </div>
-        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.4rem;">Multiple Plans & Channels</h3>
-        <p class="rtl" style="font-size:0.78rem;color:var(--neon);margin-bottom:.5rem;">چندین پلن و کانال</p>
-        <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;">
-          Create unlimited subscription plans (weekly, monthly, yearly) across <strong style="color:var(--text);">multiple channels or groups</strong> from a single bot dashboard.
-        </p>
-      </div>
-
-      <!-- 3 -->
-      <div class="glass-card" style="padding:1.75rem;">
-        <div style="width:46px;height:46px;border-radius:13px;background:rgba(124,58,237,0.16);border:1px solid rgba(124,58,237,0.32);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;">
-          <svg width="22" height="22" fill="none" stroke="var(--accent-bright)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        </div>
-        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.4rem;">Renewal Reminders</h3>
-        <p class="rtl" style="font-size:0.78rem;color:var(--accent-bright);margin-bottom:.5rem;">یادآوری تجدید اشتراک</p>
-        <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;">
-          The bot automatically messages subscribers before their plan expires, boosting renewal rates without you lifting a finger.
-        </p>
-      </div>
-
-      <!-- 4 -->
-      <div class="glass-card" style="padding:1.75rem;">
-        <div style="width:46px;height:46px;border-radius:13px;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.28);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;">
-          <svg width="22" height="22" fill="none" stroke="var(--neon)" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.4rem;">Subscriber Dashboard</h3>
-        <p class="rtl" style="font-size:0.78rem;color:var(--neon);margin-bottom:.5rem;">داشبورد مشترکین</p>
-        <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;">
-          See who's subscribed, when they expire, and how much revenue each plan generates — all inside Telegram.
-        </p>
-      </div>
-
-      <!-- 5 -->
-      <div class="glass-card" style="padding:1.75rem;">
-        <div style="width:46px;height:46px;border-radius:13px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;">
-          <svg width="22" height="22" fill="none" stroke="var(--accent-bright)" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-        </div>
-        <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:.4rem;">Payment Gateway Ready</h3>
-        <p class="rtl" style="font-size:0.78rem;color:var(--accent-bright);margin-bottom:.5rem;">آماده اتصال به درگاه پرداخت</p>
-        <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;">
-          Connect your preferred payment method — card, crypto (USDT), or local gateways. Payments confirmed, users added — automatically.
-        </p>
-      </div>
-
-
-
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ HOW IT WORKS ═══════ -->
-<section id="how" style="padding:5rem 1.25rem;position:relative;overflow:hidden;">
-  <div class="glow-orb" style="width:400px;height:400px;background:rgba(6,182,212,0.08);top:0;right:-100px;"></div>
-  <div style="max-width:900px;margin:0 auto;position:relative;">
-    <div style="text-align:center;margin-bottom:3.5rem;">
-      <div class="badge" style="margin-bottom:1rem;">How It Works</div>
-      <h2 style="font-size:2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem;">Up and running in <span class="gradient-text">minutes</span></h2>
-      <p class="rtl" style="color:var(--muted);">در چند دقیقه راه‌اندازی کنید</p>
-    </div>
-
-    <div style="display:flex;flex-direction:column;gap:1rem;">
-
-      <div class="glass-card" style="padding:1.5rem 1.75rem;display:flex;align-items:flex-start;gap:1.25rem;">
-        <div class="step-num">1</div>
-        <div style="flex:1;">
-          <h3 style="font-weight:700;margin-bottom:.3rem;">Purchase perSUB access</h3>
-          <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;">
-            Choose a plan below, fill in your Telegram username, and complete payment. Our admin activates your bot within minutes.
-          </p>
-          <p class="rtl" style="color:var(--dimmer);font-size:0.8rem;margin-top:.3rem;">پلن مناسب خود را انتخاب کنید، اطلاعات را وارد کنید و پرداخت را انجام دهید.</p>
-        </div>
-      </div>
-
-      <div class="glass-card" style="padding:1.5rem 1.75rem;display:flex;align-items:flex-start;gap:1.25rem;">
-        <div class="step-num">2</div>
-        <div style="flex:1;">
-          <h3 style="font-weight:700;margin-bottom:.3rem;">Add the bot to your channel</h3>
-          <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;">
-            Make <span class="mono" style="color:var(--accent-bright);font-size:0.82rem;">@perSUB_bot</span> an admin in your private channel/group. One command and it's linked.
-          </p>
-          <p class="rtl" style="color:var(--dimmer);font-size:0.8rem;margin-top:.3rem;">ربات را ادمین کانال خصوصی خود کنید. یک دستور و لینک می‌شود.</p>
-        </div>
-      </div>
-
-      <div class="glass-card" style="padding:1.5rem 1.75rem;display:flex;align-items:flex-start;gap:1.25rem;">
-        <div class="step-num">3</div>
-        <div style="flex:1;">
-          <h3 style="font-weight:700;margin-bottom:.3rem;">Define your plans & share the link</h3>
-          <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;">
-            Set plan names, prices, and durations via simple bot commands. Share your unique subscription link anywhere — website, bio, DMs.
-          </p>
-          <p class="rtl" style="color:var(--dimmer);font-size:0.8rem;margin-top:.3rem;">پلن‌ها را تعریف کنید و لینک اشتراک را در هرجایی به اشتراک بگذارید.</p>
-        </div>
-      </div>
-
-      <div class="glass-card" style="padding:1.5rem 1.75rem;display:flex;align-items:flex-start;gap:1.25rem;">
-        <div class="step-num">4</div>
-        <div style="flex:1;">
-          <h3 style="font-weight:700;margin-bottom:.3rem;">Subscribers pay → bot handles everything</h3>
-          <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;">
-            The bot confirms payment, adds the user, sends a welcome message, and removes them automatically when the plan expires. You just collect revenue.
-          </p>
-          <p class="rtl" style="color:var(--dimmer);font-size:0.8rem;margin-top:.3rem;">ربات پرداخت را تأیید می‌کند، کاربر را اضافه می‌کند و بعد از انقضا حذف می‌کند. شما فقط درآمد می‌گیرید.</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Terminal demo -->
-    <div style="margin-top:2.5rem;">
-      <div class="terminal">
-        <div class="t-dim">— bot activity log ———————————————</div>
-        <div><span class="t-green">✓</span> <span class="t-cyan">@ali_reza</span> subscribed to <span class="t-purple">VIP Channel</span> · Plan: Monthly</div>
-        <div><span class="t-green">✓</span> Added @ali_reza to channel · expires in <span class="t-cyan">30 days</span></div>
-        <div><span class="t-green">✓</span> Welcome message sent</div>
-        <div class="t-dim">───────────────────────────────────</div>
-        <div><span style="color:#facc15;">⏰</span> <span class="t-cyan">@maryam_k</span> plan expiring in <span class="t-cyan">3 days</span> · reminder sent</div>
-        <div><span style="color:#f87171;">✕</span> <span class="t-cyan">@user_404</span> subscription expired · removed from channel</div>
-        <div class="t-dim">───────────────────────────────────</div>
-        <div><span class="t-green">✓</span> Revenue today: <span class="t-purple">$87</span> · Active subs: <span class="t-cyan">142</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ PRICING ═══════ -->
-<section id="pricing" style="padding:5rem 1.25rem;position:relative;overflow:hidden;">
-  <div class="glow-orb" style="width:500px;height:250px;background:rgba(124,58,237,0.09);top:0;left:50%;transform:translateX(-50%);"></div>
-  <div style="max-width:1100px;margin:0 auto;position:relative;">
-    <div style="text-align:center;margin-bottom:3.5rem;">
-      <div class="badge" style="margin-bottom:1rem;">Pricing</div>
-      <h2 style="font-size:2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem;">Choose your <span class="gradient-text">perSUB plan</span></h2>
-      <p class="rtl" style="color:var(--muted);">پلن perSUB خود را انتخاب کنید</p>
-    </div>
-
-    <!-- Single plan — centered -->
-    <div style="display:flex;justify-content:center;">
-      <div class="pricing-card featured" style="padding:2.5rem;width:100%;max-width:420px;">
-        <div style="text-align:center;margin-bottom:1.75rem;">
-          <div class="badge" style="margin-bottom:1rem;">اشتراک ماهانه</div>
-          <h3 style="font-size:1.3rem;font-weight:700;margin-bottom:.25rem;">perSUB ماهانه</h3>
-          <p class="rtl" style="font-size:0.85rem;color:var(--muted);">دسترسی کامل به ربات — یک ماه</p>
-        </div>
-        <div style="text-align:center;margin-bottom:2rem;">
-          <div style="display:inline-flex;align-items:baseline;gap:6px;">
-            <span style="font-size:3.5rem;font-weight:800;" class="gradient-text">۱۴۹</span>
-            <span style="font-size:1.2rem;font-weight:600;color:var(--muted);">تومان</span>
-          </div>
-          <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">در ماه · ماهانه تمدید می‌شود</div>
-        </div>
-        <ul style="list-style:none;margin-bottom:2rem;display:flex;flex-direction:column;gap:12px;">
-          <li style="display:flex;align-items:center;gap:10px;font-size:0.9rem;">
-            <svg width="16" height="16" fill="none" stroke="var(--neon)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-            اضافه و حذف خودکار اعضا
-          </li>
-          <li style="display:flex;align-items:center;gap:10px;font-size:0.9rem;">
-            <svg width="16" height="16" fill="none" stroke="var(--neon)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-            پلن‌های اشتراک نامحدود
-          </li>
-          <li style="display:flex;align-items:center;gap:10px;font-size:0.9rem;">
-            <svg width="16" height="16" fill="none" stroke="var(--neon)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-            یادآور تجدید اشتراک خودکار
-          </li>
-          <li style="display:flex;align-items:center;gap:10px;font-size:0.9rem;">
-            <svg width="16" height="16" fill="none" stroke="var(--neon)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-            پشتیبانی از چند کانال و گروه
-          </li>
-          <li style="display:flex;align-items:center;gap:10px;font-size:0.9rem;">
-            <svg width="16" height="16" fill="none" stroke="var(--neon)" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-            داشبورد مدیریت مشترکین
-          </li>
-          <li style="display:flex;align-items:center;gap:10px;font-size:0.9rem;">
-            <svg width="16" height="16" fill="none" stroke="#a78bfa" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-            <span style="color:var(--accent-bright);font-weight:500;">پشتیبانی ۲۴/۷</span>
-          </li>
+        <div class="pkg-name">Sales Bot</div>
+        <div class="pkg-desc">A complete sales machine inside Telegram. Showcase products, collect orders, notify the admin — all automated.</div>
+        <ul class="pkg-features">
+          <li><svg width="14" height="14" fill="none" stroke="#3b82f6" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Product catalog with images & prices</li>
+          <li><svg width="14" height="14" fill="none" stroke="#3b82f6" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Order collection & receipt capture</li>
+          <li><svg width="14" height="14" fill="none" stroke="#3b82f6" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Admin confirm / reject / contact buttons</li>
+          <li><svg width="14" height="14" fill="none" stroke="#3b82f6" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Archive channel + order history JSON</li>
         </ul>
-        <button class="btn-primary" style="width:100%;padding:1rem;font-size:1.05rem;" onclick="openModal('perSUB ماهانه','۱۴۹ تومان')">
-          🚀 همین الان بخر — ۱۴۹ تومان
-        </button>
+        <div class="pkg-price">
+          <span class="amount">149T</span>
+          <span class="unit">/ month</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%;padding:.8rem;" onclick="openModal('Sales Bot','149 تومان')">Buy Now</button>
       </div>
-    </div>
 
-    <p style="text-align:center;margin-top:2rem;font-size:0.82rem;color:var(--muted);">
-      🔐 پرداخت کارتی &nbsp;·&nbsp; ⚡ فعال‌سازی در چند دقیقه &nbsp;·&nbsp; 📬 راهنمای راه‌اندازی ارسال می‌شود
-    </p>
+      <!-- 2: Subscription Bot -->
+      <div class="pkg-card featured">
+        <div class="pkg-badge">Most Popular</div>
+        <div class="pkg-icon" style="background:rgba(6,182,212,.12);border-color:rgba(6,182,212,.25);margin-top:.5rem;">
+          <svg width="24" height="24" fill="none" stroke="#06b6d4" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <div class="pkg-name">Subscription Bot</div>
+        <div class="pkg-desc">Sell recurring access to your private channels or groups. Auto-add on payment, auto-remove on expiry.</div>
+        <ul class="pkg-features">
+          <li><svg width="14" height="14" fill="none" stroke="#06b6d4" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Auto add / remove members</li>
+          <li><svg width="14" height="14" fill="none" stroke="#06b6d4" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Renewal reminders (3 days before)</li>
+          <li><svg width="14" height="14" fill="none" stroke="#06b6d4" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Admin /extend command per user</li>
+          <li><svg width="14" height="14" fill="none" stroke="#06b6d4" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Full purchase history (JSON)</li>
+          <li><svg width="14" height="14" fill="none" stroke="#06b6d4" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Mini App storefront included</li>
+        </ul>
+        <div class="pkg-price">
+          <span class="amount" style="background:linear-gradient(130deg,#fff,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">149T</span>
+          <span class="unit">/ month</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%;padding:.8rem;background:linear-gradient(135deg,#0891b2,#0e7490);" onclick="openModal('Subscription Bot','149 تومان')">Buy Now</button>
+      </div>
+
+      <!-- 3: Content Lock Bot -->
+      <div class="pkg-card">
+        <div class="pkg-icon" style="background:rgba(168,85,247,.12);border-color:rgba(168,85,247,.25);">
+          <svg width="24" height="24" fill="none" stroke="#a855f7" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><circle cx="12" cy="16" r="1" fill="#a855f7"/></svg>
+        </div>
+        <div class="pkg-name">Content Lock Bot</div>
+        <div class="pkg-desc">Lock premium posts, files, or links behind a payment wall. Content released automatically once payment is confirmed.</div>
+        <ul class="pkg-features">
+          <li><svg width="14" height="14" fill="none" stroke="#a855f7" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Lock any content type (file, link, text)</li>
+          <li><svg width="14" height="14" fill="none" stroke="#a855f7" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>One-time or recurring unlock</li>
+          <li><svg width="14" height="14" fill="none" stroke="#a855f7" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Admin approval flow</li>
+          <li><svg width="14" height="14" fill="none" stroke="#a855f7" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Access log per user</li>
+        </ul>
+        <div class="pkg-price">
+          <span class="amount">149T</span>
+          <span class="unit">/ month</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%;padding:.8rem;background:linear-gradient(135deg,#7c3aed,#5b21b6);" onclick="openModal('Content Lock Bot','149 تومان')">Buy Now</button>
+      </div>
+
+      <!-- 4: Quiz Bot -->
+      <div class="pkg-card">
+        <div class="pkg-icon" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.25);">
+          <svg width="24" height="24" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12h6M9 16h4"/></svg>
+        </div>
+        <div class="pkg-name">Quiz Bot</div>
+        <div class="pkg-desc">Run 4-option multiple choice quizzes with registration, scoring, and automatic result reporting to the admin.</div>
+        <ul class="pkg-features">
+          <li><svg width="14" height="14" fill="none" stroke="#f59e0b" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Registration form (name + national ID)</li>
+          <li><svg width="14" height="14" fill="none" stroke="#f59e0b" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Dynamic question bank (JSON)</li>
+          <li><svg width="14" height="14" fill="none" stroke="#f59e0b" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Auto score + result to admin</li>
+          <li><svg width="14" height="14" fill="none" stroke="#f59e0b" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Question manager CLI tool</li>
+        </ul>
+        <div class="pkg-price">
+          <span class="amount">149T</span>
+          <span class="unit">/ month</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%;padding:.8rem;background:linear-gradient(135deg,#d97706,#b45309);" onclick="openModal('Quiz Bot','149 تومان')">Buy Now</button>
+      </div>
+
+      <!-- 5: Support Bot -->
+      <div class="pkg-card">
+        <div class="pkg-icon" style="background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.25);">
+          <svg width="24" height="24" fill="none" stroke="#22c55e" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="pkg-name">Support Bot</div>
+        <div class="pkg-desc">A customer support inbox inside Telegram. Users send tickets, admins reply — all in one clean interface.</div>
+        <ul class="pkg-features">
+          <li><svg width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Ticket creation & tracking</li>
+          <li><svg width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Admin reply forwarded to user</li>
+          <li><svg width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Open / close ticket status</li>
+          <li><svg width="14" height="14" fill="none" stroke="#22c55e" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>24h response SLA indicator</li>
+        </ul>
+        <div class="pkg-price">
+          <span class="amount">149T</span>
+          <span class="unit">/ month</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%;padding:.8rem;background:linear-gradient(135deg,#16a34a,#15803d);" onclick="openModal('Support Bot','149 تومان')">Buy Now</button>
+      </div>
+
+    </div>
   </div>
 </section>
 
-<!-- ═══════ SUPPORT ═══════ -->
-<section id="support" style="padding:5rem 1.25rem;position:relative;overflow:hidden;">
-  <div class="glow-orb" style="width:350px;height:350px;background:rgba(6,182,212,0.07);bottom:-80px;left:5%;"></div>
-  <div style="max-width:900px;margin:0 auto;position:relative;">
-    <div style="text-align:center;margin-bottom:3rem;">
-      <div class="badge" style="margin-bottom:1rem;">پشتیبانی</div>
-      <h2 style="font-size:2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem;">
-        مشکلی پیش اومد؟ <span class="gradient-text">اینجاییم</span>
-      </h2>
-      <p style="color:var(--muted);font-size:0.92rem;">We're here to help — reach us through any of the channels below</p>
-    </div>
+<!-- HOW IT WORKS -->
+<section class="section" id="how" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="section-inner">
+    <div class="eyebrow">Process</div>
+    <h2 class="section-title">From order to live bot.</h2>
+    <p class="section-sub">No technical knowledge needed on your end — we handle everything.</p>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;">
-
-      <!-- Telegram support -->
-      <div class="glass-card" style="padding:1.75rem;text-align:center;">
-        <div style="width:52px;height:52px;border-radius:14px;background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M21.2 4.2L2.6 11.4c-1.2.5-1.2 1.2-.2 1.5l4.6 1.4 1.8 5.4c.2.7.5.9 1 .9.4 0 .6-.2.9-.5l2.2-2.2 4.5 3.3c.8.5 1.4.2 1.6-.8l2.8-13.3c.3-1.3-.4-1.9-1.6-1.4z" fill="var(--neon)"/></svg>
-        </div>
-        <h3 style="font-weight:700;margin-bottom:.4rem;">پشتیبانی تلگرام</h3>
-        <p style="color:var(--muted);font-size:0.85rem;line-height:1.65;margin-bottom:1.1rem;">
-          سریع‌ترین راه ارتباط با تیم ما. معمولاً در کمتر از ۳۰ دقیقه پاسخ می‌دهیم.
-        </p>
-        <a href="https://t.me/YOUR_SUPPORT_USERNAME" target="_blank"
-          style="display:inline-block;background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.3);color:var(--neon);border-radius:8px;padding:.55rem 1.2rem;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all .2s;"
-          onmouseover="this.style.background='rgba(6,182,212,0.2)'" onmouseout="this.style.background='rgba(6,182,212,0.1)'">
-          ارسال پیام در تلگرام →
-        </a>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Pick a package</h3>
+        <p>Choose the bot type that matches your use case and fill out the checkout form with your details and requirements.</p>
       </div>
-
-      <!-- Email support -->
-      <div class="glass-card" style="padding:1.75rem;text-align:center;">
-        <div style="width:52px;height:52px;border-radius:14px;background:rgba(124,58,237,0.14);border:1px solid rgba(124,58,237,0.32);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-          <svg width="24" height="24" fill="none" stroke="var(--accent-bright)" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
-        <h3 style="font-weight:700;margin-bottom:.4rem;">ایمیل پشتیبانی</h3>
-        <p style="color:var(--muted);font-size:0.85rem;line-height:1.65;margin-bottom:1.1rem;">
-          برای مشکلات فنی، سوالات حساب یا درخواست‌های ویژه ایمیل بزنید.
-        </p>
-        <a href="mailto:support@yourdomain.com"
-          style="display:inline-block;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);color:var(--accent-bright);border-radius:8px;padding:.55rem 1.2rem;font-size:0.85rem;font-weight:600;text-decoration:none;transition:all .2s;"
-          onmouseover="this.style.background='rgba(124,58,237,0.2)'" onmouseout="this.style.background='rgba(124,58,237,0.1)'">
-          support@yourdomain.com
-        </a>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Pay & confirm</h3>
+        <p>Complete payment via card transfer or crypto (USDT). Send us the receipt — we verify and confirm within hours.</p>
       </div>
-
-      <!-- FAQ / Common issues -->
-      <div class="glass-card" style="padding:1.75rem;text-align:center;">
-        <div style="width:52px;height:52px;border-radius:14px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.28);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-          <svg width="24" height="24" fill="none" stroke="var(--accent-bright)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
-        <h3 style="font-weight:700;margin-bottom:.4rem;">مشکلات رایج</h3>
-        <p style="color:var(--muted);font-size:0.85rem;line-height:1.65;margin-bottom:1rem;">
-          ربات اضافه نشد؟ اشتراک فعال نشد؟ اینجا رایج‌ترین مشکلات و راه‌حل‌هایشان را ببینید.
-        </p>
-        <div style="display:flex;flex-direction:column;gap:7px;text-align:right;">
-          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:.55rem .8rem;font-size:0.8rem;color:var(--muted);">
-            <span style="color:var(--neon);">▸</span> ربات اضافه نشد — ادمین کانال بودن را چک کنید
-          </div>
-          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:.55rem .8rem;font-size:0.8rem;color:var(--muted);">
-            <span style="color:var(--neon);">▸</span> یوزرنیم اشتباه — با @ دقیق وارد کنید
-          </div>
-          <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:.55rem .8rem;font-size:0.8rem;color:var(--muted);">
-            <span style="color:var(--neon);">▸</span> پرداخت تأیید نشد — رسید را ارسال کنید
-          </div>
-        </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>We build & configure</h3>
+        <p>Our team sets up the bot with your custom settings, channel links, and content — then tests it end-to-end.</p>
       </div>
-
-    </div>
-
-    <!-- SLA strip -->
-    <div style="margin-top:2rem;text-align:center;background:rgba(124,58,237,0.07);border:1px solid var(--border);border-radius:12px;padding:1rem 1.5rem;">
-      <p style="font-size:0.85rem;color:var(--muted);">
-        ⏱ زمان پاسخ معمول: <strong style="color:var(--text);">کمتر از ۳۰ دقیقه</strong> در ساعات کاری &nbsp;·&nbsp;
-        🟢 وضعیت سیستم: <strong style="color:#4ade80;">همه سیستم‌ها فعال</strong>
-      </p>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>You go live</h3>
+        <p>We hand you the bot token, admin controls, and a walkthrough. Your bot is live and running — fully automated.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════ FOOTER ═══════ -->
-<footer style="border-top:1px solid var(--border);padding:2.5rem 1.25rem;text-align:center;">
-  <div style="max-width:1100px;margin:0 auto;">
-    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:1rem;">
-      <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--neon));display:flex;align-items:center;justify-content:center;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21.2 4.2L2.6 11.4c-1.2.5-1.2 1.2-.2 1.5l4.6 1.4 1.8 5.4c.2.7.5.9 1 .9.4 0 .6-.2.9-.5l2.2-2.2 4.5 3.3c.8.5 1.4.2 1.6-.8l2.8-13.3c.3-1.3-.4-1.9-1.6-1.4z" fill="#fff"/></svg>
+<!-- SUPPORT -->
+<section class="section" id="support">
+  <div class="section-inner">
+    <div class="eyebrow">Support</div>
+    <h2 class="section-title">We're here.</h2>
+    <p class="section-sub">Got a question, issue, or want to discuss a custom requirement? Reach us any time.</p>
+
+    <div class="support-grid">
+      <div class="support-card">
+        <div class="support-icon" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M21.2 4.2L2.6 11.4c-1.2.5-1.2 1.2-.2 1.5l4.6 1.4 1.8 5.4c.2.7.5.9 1 .9.4 0 .6-.2.9-.5l2.2-2.2 4.5 3.3c.8.5 1.4.2 1.6-.8l2.8-13.3c.3-1.3-.4-1.9-1.6-1.4z" fill="#3b82f6"/></svg>
+        </div>
+        <h3>Telegram</h3>
+        <p>Fastest channel. Typical response under 30 minutes during business hours.</p>
+        <a href="https://t.me/YOUR_SUPPORT_USERNAME" target="_blank" style="display:inline-block;background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);color:var(--blue);border-radius:8px;padding:.5rem 1.1rem;font-size:.83rem;font-weight:600;text-decoration:none;transition:all .2s;" onmouseover="this.style.background='rgba(59,130,246,.2)'" onmouseout="this.style.background='rgba(59,130,246,.1)'">Open Chat →</a>
       </div>
-      <span style="font-weight:700;font-size:1rem;">per<span class="gradient-text">SUB</span></span>
+
+      <div class="support-card">
+        <div class="support-icon" style="background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);">
+          <svg width="24" height="24" fill="none" stroke="#a855f7" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <h3>Email</h3>
+        <p>For technical issues, billing questions, or custom project discussions.</p>
+        <a href="mailto:support@pery.ir" style="display:inline-block;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.25);color:#a855f7;border-radius:8px;padding:.5rem 1.1rem;font-size:.83rem;font-weight:600;text-decoration:none;" onmouseover="this.style.background='rgba(168,85,247,.2)'" onmouseout="this.style.background='rgba(168,85,247,.1)'">support@pery.ir</a>
+      </div>
+
+      <div class="support-card">
+        <div class="support-icon" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);">
+          <svg width="24" height="24" fill="none" stroke="#22c55e" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h3>Common Issues</h3>
+        <p>Bot not added? Payment pending? These typically resolve within minutes after contact.</p>
+        <div style="display:flex;flex-direction:column;gap:.45rem;text-align:right;margin-top:.25rem;">
+          <div style="background:rgba(255,255,255,.03);border-radius:7px;padding:.5rem .75rem;font-size:.78rem;color:var(--muted);">▸ Bot not responding — check it's still running</div>
+          <div style="background:rgba(255,255,255,.03);border-radius:7px;padding:.5rem .75rem;font-size:.78rem;color:var(--muted);">▸ Payment not confirmed — send receipt again</div>
+          <div style="background:rgba(255,255,255,.03);border-radius:7px;padding:.5rem .75rem;font-size:.78rem;color:var(--muted);">▸ Wrong username — re-enter with @ prefix</div>
+        </div>
+      </div>
     </div>
-    <p style="color:var(--dimmer);font-size:0.8rem;line-height:1.8;">
-      © 2025 perSUB · Telegram Subscription Automation Bot<br/>
-      All orders are reviewed and activated manually by our team.
-    </p>
-    <p class="rtl" style="color:var(--dimmer);font-size:0.77rem;margin-top:.4rem;">
-      © ۲۰۲۵ perSUB · ربات مدیریت اشتراک تلگرام · تمامی سفارشات توسط تیم ما بررسی و فعال می‌شوند.
-    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="max-width:1160px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:.6rem;margin-bottom:1rem;">
+      <div class="logo-mark" style="width:28px;height:28px;border-radius:7px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M21.2 4.2L2.6 11.4c-1.2.5-1.2 1.2-.2 1.5l4.6 1.4 1.8 5.4c.2.7.5.9 1 .9.4 0 .6-.2.9-.5l2.2-2.2 4.5 3.3c.8.5 1.4.2 1.6-.8l2.8-13.3c.3-1.3-.4-1.9-1.6-1.4z" fill="#fff"/></svg>
+      </div>
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;">pery</span>
+    </div>
+    <p>© 2025 pery · Telegram Bot Studio · All orders reviewed and activated by our team.</p>
+    <p style="margin-top:.35rem;font-size:.76rem;">Custom bot packages — delivered within 24 hours of payment confirmation.</p>
   </div>
 </footer>
 
-<!-- ═══════ MODAL ═══════ -->
+<!-- MODAL -->
 <div id="modal-overlay" onclick="handleOverlayClick(event)">
   <div id="modal-box">
-    <div style="padding:1.4rem 1.5rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
+    <div class="modal-head">
       <div>
-        <h2 style="font-size:1.15rem;font-weight:700;margin-bottom:2px;">Get perSUB Access</h2>
-        <p style="font-size:0.8rem;color:var(--muted);">Fill in your info — we'll activate your bot</p>
-        <p class="rtl" style="font-size:0.76rem;color:var(--dimmer);">اطلاعات را وارد کنید — ربات شما فعال می‌شود</p>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:3px;">Order a Bot</div>
+        <div style="font-size:.8rem;color:var(--muted);">Fill in your details — we'll set it up for you</div>
       </div>
-      <button onclick="closeModal()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:8px;width:32px;height:32px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <button class="close-btn" onclick="closeModal()">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
 
-    <!-- Plan pill -->
-    <div style="margin:1.1rem 1.5rem;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.24);border-radius:11px;padding:.9rem 1.1rem;display:flex;justify-content:space-between;align-items:center;">
+    <div class="modal-plan-pill">
       <div>
-        <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Selected Plan</div>
-        <div style="font-weight:700;font-size:0.95rem;" id="modal-plan-name">perSUB Starter</div>
+        <div style="font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Selected Package</div>
+        <div class="modal-plan-name" id="modal-plan-name">—</div>
       </div>
       <div style="text-align:right;">
-        <div style="font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Total</div>
-        <div style="font-size:1.4rem;font-weight:800;" class="gradient-text" id="modal-plan-price">۱۴۹ تومان</div>
+        <div style="font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Monthly</div>
+        <div class="modal-plan-price" id="modal-plan-price">—</div>
       </div>
     </div>
 
-    <form id="checkout-form" onsubmit="handleCheckout(event)" style="padding:0 1.5rem 1.5rem;">
+    <form id="checkout-form" onsubmit="handleCheckout(event)" class="modal-form">
 
-      <!-- Row: username + phone -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem;">
-        <div>
+        <div class="field-wrap" style="margin:0;">
           <label class="field-label" for="tg-username">Telegram Username *</label>
-          <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">یوزرنیم تلگرام</p>
           <input class="field-input" id="tg-username" type="text" placeholder="@username" required oninput="this.value=this.value.trim()">
         </div>
-        <div>
-          <label class="field-label" for="phone">Phone Number *</label>
-          <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">شماره تلفن</p>
-          <input class="field-input" id="phone" type="tel" placeholder="+98 912 …" required>
+        <div class="field-wrap" style="margin:0;">
+          <label class="field-label" for="phone">Phone *</label>
+          <input class="field-input" id="phone" type="tel" placeholder="+98 912…" required>
         </div>
       </div>
 
-      <!-- Email -->
-      <div style="margin-bottom:1rem;">
-        <label class="field-label" for="email">Email Address *</label>
-        <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">آدرس ایمیل</p>
+      <div class="field-wrap">
+        <label class="field-label" for="email">Email *</label>
         <input class="field-input" id="email" type="email" placeholder="you@example.com" required>
       </div>
 
-      <!-- Field of work -->
-      <div style="margin-bottom:1rem;">
-        <label class="field-label" for="field-work">Field of Work / Industry *</label>
-        <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">حوزه کاری</p>
+      <div class="field-wrap">
+        <label class="field-label" for="field-work">Field of Work *</label>
         <select class="field-input" id="field-work" required>
-          <option value="" disabled selected>انتخاب کنید…</option>
-          <option value="آموزش و محتوا">📚 آموزش و محتوا</option>
-          <option value="تجارت و فروش">🛒 تجارت و فروش</option>
-          <option value="کریپتو و سرمایه‌گذاری">💹 کریپتو و سرمایه‌گذاری</option>
-          <option value="مشاوره و کوچینگ">🎯 مشاوره و کوچینگ</option>
-          <option value="خبر و رسانه">📰 خبر و رسانه</option>
-          <option value="سلامت و تناسب اندام">🏋️ سلامت و تناسب اندام</option>
-          <option value="تکنولوژی">💻 تکنولوژی</option>
-          <option value="سایر">🔹 سایر</option>
+          <option value="" disabled selected>Select your field…</option>
+          <option value="آموزش و محتوا">📚 Education & Content</option>
+          <option value="تجارت و فروش">🛒 Commerce & Sales</option>
+          <option value="کریپتو و سرمایه‌گذاری">💹 Crypto & Finance</option>
+          <option value="مشاوره و کوچینگ">🎯 Consulting & Coaching</option>
+          <option value="خبر و رسانه">📰 News & Media</option>
+          <option value="سلامت و تناسب اندام">🏋️ Health & Fitness</option>
+          <option value="تکنولوژی">💻 Technology</option>
+          <option value="سایر">🔹 Other</option>
         </select>
       </div>
 
-      <!-- Payment method -->
-      <div style="margin-bottom:1rem;">
+      <div class="field-wrap">
         <label class="field-label" for="pay-method">Payment Method *</label>
-        <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">روش پرداخت</p>
         <select class="field-input" id="pay-method" required>
           <option value="" disabled selected>Select a method…</option>
-          <option value="انتقال کارت به کارت">💳 کارت به کارت</option>
+          <option value="کارت به کارت">💳 Card Transfer</option>
           <option value="Crypto USDT (TRC-20)">🪙 Crypto USDT (TRC-20)</option>
           <option value="Crypto USDT (ERC-20)">🪙 Crypto USDT (ERC-20)</option>
         </select>
       </div>
 
-      <!-- Tx ref -->
-      <div style="margin-bottom:1rem;">
-        <label class="field-label" for="tx-ref">Transaction Reference / Proof *</label>
-        <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">شماره تراکنش یا رسید</p>
-        <input class="field-input" id="tx-ref" type="text" placeholder="شماره پیگیری، Tx ID یا یادداشت…" required>
+      <div class="field-wrap">
+        <label class="field-label" for="tx-ref">Transaction Reference / Receipt *</label>
+        <input class="field-input" id="tx-ref" type="text" placeholder="Tx ID, reference number, or note…" required>
       </div>
 
-      <!-- Bot description -->
-      <div style="margin-bottom:1.5rem;">
-        <label class="field-label" for="bot-desc">توضیحات — ربات شما چطور باشه؟ *</label>
-        <p class="rtl" style="font-size:0.7rem;color:var(--dimmer);margin-bottom:4px;">هر چیزی که می‌خواید در ربات باشه، پلن‌ها، قیمت‌ها، پیام‌های خوش‌آمد و غیره</p>
-        <textarea class="field-input" id="bot-desc" rows="4"
-          placeholder="مثلاً: یک کانال آموزشی دارم، می‌خوام ۳ پلن هفتگی، ماهانه و سه‌ماهه داشته باشم. پیام خوش‌آمد فارسی باشه و…"
-          required style="resize:vertical;min-height:90px;"></textarea>
+      <div class="field-wrap">
+        <label class="field-label" for="bot-desc">What do you need the bot to do? *</label>
+        <div class="field-sub">Describe your use case, channel names, plans, welcome messages, etc.</div>
+        <textarea class="field-input" id="bot-desc" rows="4" placeholder="e.g. I have a trading education channel, I want 3 plans (weekly, monthly, quarterly), welcome message in Persian, auto-remove expired users…" required></textarea>
       </div>
 
-      <button type="submit" class="btn-primary" id="submit-btn" style="width:100%;padding:.85rem;font-size:0.95rem;">
-        <span id="submit-label">🚀 ثبت سفارش</span>
-        <span id="submit-spinner" style="display:none;align-items:center;gap:8px;"><span class="spin"></span> در حال ارسال…</span>
+      <button type="submit" class="btn btn-primary" id="submit-btn" style="width:100%;padding:.9rem;font-size:.95rem;margin-top:.25rem;">
+        <span id="submit-label">🚀 Place Order</span>
+        <span id="submit-spinner" style="display:none;align-items:center;gap:8px;"><span class="spin"></span> Sending…</span>
       </button>
-      <p style="text-align:center;font-size:0.75rem;color:var(--dimmer);margin-top:.65rem;">
-        تیم ما پس از بررسی سفارش با شما تماس می‌گیرد
-      </p>
+      <p style="text-align:center;font-size:.75rem;color:var(--dim);margin-top:.6rem;">Our team reviews and activates your bot after verifying payment.</p>
     </form>
   </div>
 </div>
 
-<!-- Toast -->
 <div id="toast"></div>
 
-
-<!-- ═══════ JAVASCRIPT ═══════ -->
+<!-- SCRIPTS -->
 <script>
+/* ── Hero bot grid ── */
+(function() {
+  const grid = document.getElementById('hero-grid');
+  const paths = [
+    "M21.2 4.2L2.6 11.4c-1.2.5-1.2 1.2-.2 1.5l4.6 1.4 1.8 5.4c.2.7.5.9 1 .9.4 0 .6-.2.9-.5l2.2-2.2 4.5 3.3c.8.5 1.4.2 1.6-.8l2.8-13.3c.3-1.3-.4-1.9-1.6-1.4z",
+    "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z",
+    "M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z",
+    "M3 11l19-9-9 19-2-8-8-2z",
+    "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2",
+  ];
+  for (let i = 0; i < 40; i++) {
+    const div = document.createElement('div');
+    div.className = 'hero-grid-icon';
+    div.style.animationDuration = (4 + Math.random() * 6) + 's';
+    div.style.animationDelay = (-Math.random() * 8) + 's';
+    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('width','20');svg.setAttribute('height','20');
+    svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('fill','none');
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', paths[i % paths.length]);
+    path.setAttribute('stroke','#3b82f6');path.setAttribute('stroke-width','1.5');
+    path.setAttribute('fill','none');
+    svg.appendChild(path);div.appendChild(svg);grid.appendChild(div);
+  }
+})();
 
 /* ── Modal ── */
 function openModal(planName, planPrice) {
@@ -751,10 +689,53 @@ function setLoading(on) {
   document.getElementById('submit-spinner').style.display = on ? 'flex' : 'none';
 }
 
-/* ── Form submit — از طریق Telegram Mini App SDK ── */
+/* ── Telegram helpers ── */
+function escTg(str) {
+  return String(str || '—').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+async function tgSend(chatId, text, markup) {
+  const payload = { chat_id: chatId, text, parse_mode: 'HTML' };
+  if (markup) payload.reply_markup = markup;
+  const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.description || `HTTP ${res.status}`); }
+  return res.json();
+}
+
+/* ── Build messages ── */
+function buildAdminMsg(o) {
+  const D = '━━━━━━━━━━━━━━━━━━━━';
+  return `🤖 <b>New pery Order!</b>\n${D}\n`+
+    `👤 <b>Username:</b> ${escTg(o.username)}\n`+
+    `📞 <b>Phone:</b> ${escTg(o.phone)}\n`+
+    `📧 <b>Email:</b> ${escTg(o.email)}\n`+
+    `🏢 <b>Field:</b> ${escTg(o.field)}\n${D}\n`+
+    `📦 <b>Package:</b> ${escTg(o.plan)}\n`+
+    `💵 <b>Price:</b> ${escTg(o.price)}\n`+
+    `💳 <b>Method:</b> ${escTg(o.method)}\n`+
+    `🧾 <b>Receipt:</b> ${escTg(o.reference)}\n${D}\n`+
+    `📝 <b>Requirements:</b>\n${escTg(o.botDesc)}\n${D}`;
+}
+function buildArchiveMsg(o) {
+  return `📦 <b>pery Order</b>\n──────────────\n`+
+    `${escTg(o.username)} · ${escTg(o.phone)}\n${escTg(o.email)}\n`+
+    `${escTg(o.plan)} · ${escTg(o.price)}\n${escTg(o.method)} · ${escTg(o.reference)}\n`+
+    `📝 ${escTg(o.botDesc)}`;
+}
+function buildKeyboard(username) {
+  const u = username.replace(/^@/,'');
+  return { inline_keyboard: [
+    [{ text:'✅ Confirm Order', callback_data:`approve_${u}` },
+     { text:'❌ Reject',        callback_data:`reject_${u}` }],
+    [{ text:'💬 Contact Buyer', url:`https://t.me/${u}` }]
+  ]};
+}
+
+/* ── Form submit ── */
 async function handleCheckout(e) {
   e.preventDefault();
-
   const username  = document.getElementById('tg-username').value.trim();
   const phone     = document.getElementById('phone').value.trim();
   const email     = document.getElementById('email').value.trim();
@@ -766,44 +747,27 @@ async function handleCheckout(e) {
   const price     = document.getElementById('modal-plan-price').textContent;
 
   if (!username.startsWith('@')) {
-    showToast('⚠️ یوزرنیم تلگرام باید با @ شروع شود', 'error');
+    showToast('⚠️ Telegram username must start with @', 'error');
     document.getElementById('tg-username').focus();
     return;
   }
-
-  if (!tg) {
-    showToast('⚠️ این صفحه باید از داخل ربات تلگرام باز شود', 'error');
-    return;
+  if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN.includes('YOUR_')) {
+    showToast('⚙️ Bot token not configured.', 'error'); return;
   }
 
   setLoading(true);
-
-  const orderData = {
-    username, phone, email, field,
-    method, reference, botDesc, plan, price
-  };
-
+  const o = { username, phone, email, field, method, reference, botDesc, plan, price };
   try {
-    /*
-     * tg.sendData() داده رو مستقیم و امن به bot_perSub.py میفرسته
-     * (به هندلر handle_webapp_data). بدون نیاز به توکن، سرور، یا تونل.
-     * ربات خودش (با polling) پیام با دکمه تأیید/رد رو میسازه و میفرسته،
-     * و خودش هم callback های ادمین رو handle میکنه.
-     *
-     * نکته: sendData به صورت خودکار Mini App رو میبنده — این رفتار
-     * استاندارد تلگرامه و قابل تغییر نیست.
-     */
-    tg.sendData(JSON.stringify(orderData));
-    showToast('✅ سفارش ثبت شد!');
-    // مودال و صفحه به زودی توسط تلگرام بسته میشه
-
-  } catch (err) {
-    console.error('sendData error:', err);
-    showToast('❌ ارسال ناموفق بود.', 'error');
+    await tgSend(ADMIN_CHAT_ID, buildAdminMsg(o), buildKeyboard(username));
+    try { await tgSend(ARCHIVE_CHANNEL_ID, buildArchiveMsg(o)); } catch(_) {}
+    showToast('✅ Order placed! We\'ll be in touch shortly.');
+    closeModal();
+  } catch(err) {
+    console.error(err);
+    showToast('❌ Failed to send. Check bot token / chat ID.', 'error');
     setLoading(false);
   }
 }
-
 </script>
 </body>
 </html>
